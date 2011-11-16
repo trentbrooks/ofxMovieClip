@@ -7,12 +7,13 @@ ofxFBOImageSequenceLoader::ofxFBOImageSequenceLoader(){
 
 
 //--------------------------------------------------------------
-void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits){
+void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom)
+{
 
 	
-	vector<ofxFBOTexture*> newAssets;
+	vector<ofFbo*> newAssets;
 	
-	for(int i=0; i < nImages; i++){
+	for(int i=startFrom; i < nImages; i++){
 		
 		// format string to load image sequence - note images must start at 0 not 1.
 		stringstream format;
@@ -31,7 +32,7 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nIm
 		
 		
 		// setup new fbo
-		ofxFBOTexture* fbo = new ofxFBOTexture();
+        ofFbo* fbo = new ofFbo();
 		fbo->allocate(loader.getWidth(), loader.getHeight());
 		
 		// draw to fbo once
@@ -83,7 +84,7 @@ void ofxFBOImageSequenceLoader::dispose()
 	for(int i=0; i < assetsSize; i++){
 		int imagesSize = assetCollections[i].size();
 		for(int j=0; j < imagesSize; j++){
-			assetCollections[i][j]->clear();		
+			//assetCollections[i][j]->clear();		
 			delete assetCollections[i][j];
 		}
 	}
