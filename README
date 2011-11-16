@@ -1,9 +1,23 @@
-ofxFBOMovieClip & ofxFBOImageSequenceLoader are a set of helper classes for loading and controlling image sequences as FBO textures. These were created to add simple timeline control similar to Flash ( play(), stop(), gotoAndPlay(), etc ).
+ofxFBOMovieClip & ofxFBOImageSequenceLoader are a set of helper classes for loading and controlling image sequences as FBO textures. These were created to add simple timeline control similar to Flash ( play(), stop(), gotoAndPlay(), etc ). Works with Openframeworks 007.
 
 CREDIT
-ofxFBOTexture by Zach Gage, Theo Watson, Memo Akten, Josh Nimoy is included in this package. Originally downloaded from jtnimoy on this thread: http://www.openframeworks.cc/forum/viewtopic.php?f=10&t=3143&hilit=fbo).
 ofxFBOImageSequenceLoader is similar to and inspired by FlightPhase's http://www.flightphase.com ofxImageSequence.
 
-Instructions and examples to come…
+SAMPLE USAGE
+
+// below would load 11 images from "horses/frame00.png" - "horses/frame10.png"
+// parameters: frame label, total images, path to images, image type, number of digits for the count (eg. 3 = 001, 2 = 01), count start (if your first image file is "horses/frame00.png" then start at 0) 
+ofxFBOImageSequenceLoader fis;
+fis.loadAndCreateSequence("horseWalk", 11, "horses/frame", "png", 2, 0);
+
+// initialise a movie clip, passing a reference to the ofxFBOImageSequenceLoader, and desired frame rate for the image sequence
+ofxFBOMovieClip mc;
+mc.init(&fis, 30.0f);
+
+// control the movie clip timeline from keyboard events/mouse events etc.
+mc.gotoAndPlay("horseWalk");
+
+// in your main draw loop
+mc.drawFrame(0, 0);
 
 Trent
