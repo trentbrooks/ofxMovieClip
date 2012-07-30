@@ -37,6 +37,7 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nIm
 		
 		// draw to fbo once
 		fbo->begin();
+		ofClear(0,0,0,0);
 		loader.draw(0, 0, loader.getWidth(), loader.getHeight());		
 		fbo->end();
 		
