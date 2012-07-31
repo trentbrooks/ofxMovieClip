@@ -5,9 +5,16 @@ ofxFBOImageSequenceLoader is similar to and inspired by FlightPhase's http://www
 
 SAMPLE USAGE
 
+// setup image sequencer
+ofxFBOImageSequenceLoader fis;
+
+// load a folder of images as image sequence -optional 2nd paramter is frame label, if empty it defaults to folder name. eg "frogs"
+fis.loadAndCreateSequence("frogs");
+fis.loadAndCreateSequence("horses", "horseWalk");
+
+// OR load a custom range for finer control...
 // below would load 11 images from "horses/frame00.png" - "horses/frame10.png"
 // parameters: frame label, total images, path to images, image type, number of digits for the count (eg. 3 = 001, 2 = 01), count start (if your first image file is "horses/frame00.png" then start at 0) 
-ofxFBOImageSequenceLoader fis;
 fis.loadAndCreateSequence("horseWalk", 11, "horses/frame", "png", 2, 0);
 
 // initialise a movie clip, passing a reference to the ofxFBOImageSequenceLoader, and desired frame rate for the image sequence
