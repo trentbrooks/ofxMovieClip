@@ -7,6 +7,50 @@ ofxFBOImageSequenceLoader::ofxFBOImageSequenceLoader(){
 
 
 //--------------------------------------------------------------
+void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string frameLabel) 
+{
+    ofDirectory dir;
+    dir.sort();
+    int numFiles = dir.listDir(folderPath);
+    
+    vector<ofFbo*> newAssets;
+	
+	for(int i=0; i < numFiles; i++){
+		
+        string fileExtension = ofToUpper(dir.getFile(i).getExtension());
+        if(fileExtension == "JPG" || fileExtension == "PNG") {
+            
+            // load and allocate memory for images
+            loader.loadImage(dir.getPath(i));
+            cout << dir.getPath(i) << endl;
+            
+            // setup new fbo
+            ofFbo* fbo = new ofFbo();
+            fbo->allocate(loader.getWidth(), loader.getHeight());
+            
+            // draw to fbo once
+            fbo->begin();
+            ofClear(0,0,0,0);
+            loader.draw(0, 0, loader.getWidth(), loader.getHeight());		
+            fbo->end();
+            
+            // clear image data from memory?
+            loader.clear();
+            
+            // push fbos to vector array
+            newAssets.push_back(fbo);
+        }
+	}
+    
+	// push assets to collections
+	assetCollections.push_back(newAssets);
+	
+	// push frame labes to vector array
+    string newFrameLabel = (frameLabel == "") ? folderPath : frameLabel;
+	assetFrameLabels.push_back(newFrameLabel);	
+}
+
+
 void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom)
 {
 
@@ -24,12 +68,10 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nIm
 			format <<filenamePrefix<<"%d."<<filetype; 
 		}		
 		sprintf(imagename, format.str().c_str(), i);
-		printf("%s \n", imagename);
+        cout << imagename << endl;
 		
 		// load and allocate memory for images
 		loader.loadImage(string(imagename));
-
-		
 		
 		// setup new fbo
         ofFbo* fbo = new ofFbo();
@@ -58,6 +100,7 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nIm
 	assetFrameLabels.push_back(frameLabel);	
 	
 }
+
 
 
 //--------------------------------------------------------------
