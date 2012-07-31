@@ -14,7 +14,12 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string 
     int numFiles = dir.listDir(folderPath);
     
     vector<ofFbo*> newAssets;
-	
+    
+    // semi-transparent images don't seem to draw properly when ofEnableAlphaBlending is on?
+    // so I will disable if it's on and then re-enable after fbos created.
+    int isBlendingOn = ofGetStyle().blendingMode;
+    if(isBlendingOn == 1) ofDisableAlphaBlending();
+    
 	for(int i=0; i < numFiles; i++){
 		
         string fileExtension = ofToUpper(dir.getFile(i).getExtension());
@@ -31,7 +36,8 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string 
             // draw to fbo once
             fbo->begin();
             ofClear(0,0,0,0);
-            loader.draw(0, 0, loader.getWidth(), loader.getHeight());		
+            //ofSetColor(255);
+            loader.draw(0, 0);
             fbo->end();
             
             // clear image data from memory?
@@ -41,6 +47,9 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string 
             newAssets.push_back(fbo);
         }
 	}
+    
+    // reset alpha blending
+    if(isBlendingOn == 1) ofEnableAlphaBlending();
     
 	// push assets to collections
 	assetCollections.push_back(newAssets);
@@ -54,7 +63,6 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string 
 void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom)
 {
 
-	
 	vector<ofFbo*> newAssets;
 	
 	for(int i=startFrom; i < nImages; i++){

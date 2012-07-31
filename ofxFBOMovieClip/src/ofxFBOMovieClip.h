@@ -80,8 +80,13 @@ class ofxFBOMovieClip
 		void gotoAndPlay(string frameLabel, int frameNumber);
 		void gotoAndStop(string frameLabel, int frameNumber);
 		
+        void setPosition(int x, int y);
+        void setPosition(ofPoint pos);
+        ofPoint position;
+        
 		// display
-		void drawFrame(int x, int y);
+		void drawFrame();
+        void drawFrame(int x, int y);
 		void drawFrame(int x, int y, float w, float h);
 		
 		// cleanup
@@ -95,8 +100,8 @@ class ofxFBOMovieClip
 		void stepForward();
 		
 		// draw with texture returns
-		ofFbo* getFrameAtPercent(float percent);
-		ofFbo* getFrame();
+		ofFbo*& getFrameAtPercent(float percent);
+		ofFbo*& getFrame();
 		
 		// framerates
 		float frameRate;

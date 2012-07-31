@@ -7,6 +7,7 @@ ofxFBOMovieClip::ofxFBOMovieClip(){
 	playMode = 1;
 	frameRate = 30.0f;
 	frameLabelId = 0;
+    position = ofPoint(0,0);
 }
 
 //--------------------------------------------------------------
@@ -129,6 +130,25 @@ void ofxFBOMovieClip::tick()
 	}
 }
 
+//--------------------------------------------------------------
+void ofxFBOMovieClip::setPosition(int x, int y)
+{
+    position.x = x;
+    position.y = y;
+}
+
+//--------------------------------------------------------------
+void ofxFBOMovieClip::setPosition(ofPoint pos)
+{
+    position = pos;
+}
+
+
+//--------------------------------------------------------------
+void ofxFBOMovieClip::drawFrame()
+{	
+	getFrame()->draw(position.x, position.y);
+}
 
 //--------------------------------------------------------------
 void ofxFBOMovieClip::drawFrame(int x, int y)
@@ -143,14 +163,14 @@ void ofxFBOMovieClip::drawFrame(int x, int y, float w, float h)
 }
 
 //--------------------------------------------------------------
-ofFbo* ofxFBOMovieClip::getFrame()
+ofFbo*& ofxFBOMovieClip::getFrame()
 {
 	tick(); // now gets called whenever a getFrame is requested instead of manually	
 	return getFrameAtPercent(playheadCount / frameRate);
 }
 
 //--------------------------------------------------------------
-ofFbo* ofxFBOMovieClip::getFrameAtPercent(float percent)
+ofFbo*& ofxFBOMovieClip::getFrameAtPercent(float percent)
 {
 	return fboImageSequence->assetCollections[frameLabelId][(int)(percent * fboImageSequence->assetCollections[frameLabelId].size())];
 }
