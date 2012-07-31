@@ -16,7 +16,7 @@ ofxFBOImageSequenceLoader is similar to and inspired by FlightPhase's http://www
 	mc.init(&fis, 30.0f);
 
 	// control the movie clip timeline from keyboard events/mouse events etc.
-	mc.gotoAndPlay("horseWalk");
+	mc.gotoAndPlay("horses");
 
 	// in your main draw loop
 	mc.drawFrame(0, 0);
