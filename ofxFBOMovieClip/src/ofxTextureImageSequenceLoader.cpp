@@ -1,55 +1,40 @@
-#include "ofxFBOImageSequenceLoader.h"
+#include "ofxTextureImageSequenceLoader.h"
 
 //--------------------------------------------------------------
-ofxFBOImageSequenceLoader::ofxFBOImageSequenceLoader(){
+ofxTextureImageSequenceLoader::ofxTextureImageSequenceLoader(){
 
 }
 
 
 //--------------------------------------------------------------
-void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string frameLabel)
+void ofxTextureImageSequenceLoader::loadAndCreateSequence(string folderPath, string frameLabel)
 {
     ofDirectory dir;
     int numFiles = dir.listDir(folderPath);
     dir.sort();
 
-    vector<ofFbo*> newAssets;
-
-    // semi-transparent images don't seem to draw properly when ofEnableAlphaBlending is on?
-    // so I will disable if it's on and then re-enable after fbos created.
-    int isBlendingOn = ofGetStyle().blendingMode;
-    if(isBlendingOn == 1) ofDisableAlphaBlending();
+    vector<ofTexture*> newAssets;
 
 	for(int i=0; i < numFiles; i++){
 
         string fileExtension = ofToUpper(dir.getFile(i).getExtension());
         if(fileExtension == "JPG" || fileExtension == "PNG") {
-
+            
             // load and allocate memory for images
             loader.loadImage(dir.getPath(i));
             cout << dir.getPath(i) << endl;
-
-            // setup new fbo
-            ofFbo* fbo = new ofFbo();
-            fbo->allocate(loader.getWidth(), loader.getHeight());
-
-            // draw to fbo once
-            fbo->begin();
-            ofClear(0,0,0,0);
-            //ofSetColor(255);
-            loader.draw(0, 0);
-            fbo->end();
-
+            
+            // setup texture
+            ofTexture* texture = makeTextureFromImage(&loader);
+            
+            // push texture to vector array
+            newAssets.push_back(texture);
+            
             // clear image data from memory?
             loader.clear();
-
-            // push fbos to vector array
-            newAssets.push_back(fbo);
         }
-	}
-
-    // reset alpha blending
-    if(isBlendingOn == 1) ofEnableAlphaBlending();
+        
+    }
 
 	// push assets to collections
 	assetCollections.push_back(newAssets);
@@ -61,14 +46,10 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string 
 }
 
 
-void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom)
+void ofxTextureImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom)
 {
 
-	vector<ofFbo*> newAssets;
-    // semi-transparent images don't seem to draw properly when ofEnableAlphaBlending is on?
-    // so I will disable if it's on and then re-enable after fbos created.
-    int isBlendingOn = ofGetStyle().blendingMode;
-    if(isBlendingOn == 1) ofDisableAlphaBlending();
+	vector<ofTexture*> newAssets;
 
 	for(int i=startFrom; i < nImages; i++){
 
@@ -86,29 +67,19 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nIm
 		// load and allocate memory for images
 		loader.loadImage(string(imagename));
 
-		// setup new fbo
-        ofFbo* fbo = new ofFbo();
-		fbo->allocate(loader.getWidth(), loader.getHeight());
+        // setup texture
+        ofTexture* texture = makeTextureFromImage(&loader);
 
-		// draw to fbo once
-		fbo->begin();
-		ofClear(0,0,0,0);
-		loader.draw(0, 0, loader.getWidth(), loader.getHeight());
-		fbo->end();
-
-		// clear image data from memory?
+		// push texture to vector array
+		newAssets.push_back(texture);
+        
+        // clear image data from memory?
 		loader.clear();
-
-		// push fbos to vector array
-		newAssets.push_back(fbo);
 
 
 
 	}
 
-    // reset alpha blending
-    if(isBlendingOn == 1) ofEnableAlphaBlending();
-    
 	// push assets to collections
 	assetCollections.push_back(newAssets);
 
@@ -117,10 +88,30 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nIm
 
 }
 
+ofTexture* ofxTextureImageSequenceLoader::makeTextureFromImage(ofImage *img, bool useARB){
+    
+	ofTexture* t = new ofTexture();
+    if(img->type == OF_IMAGE_COLOR_ALPHA){
+        // alpha image
+        t->allocate(img->width, img->height, GL_RGBA, useARB);
+        t->loadData(img->getPixels(),img->width, img->height, GL_RGBA);
+	}else if(img->type == OF_IMAGE_COLOR){
+        // rgb image
+		t->allocate(img->width, img->height, GL_RGB, useARB);
+        t->loadData(img->getPixels(),img->width, img->height, GL_RGB);
+	} else {
+        // greyscale image
+        t->allocate(img->width, img->height, GL_LUMINANCE, false);
+        t->loadData(img->getPixels(),img->width, img->height, GL_LUMINANCE);
+    }
+    
+	return t;
+    
+}
 
 
 //--------------------------------------------------------------
-int ofxFBOImageSequenceLoader::getAssetsId(string frameLabel)
+int ofxTextureImageSequenceLoader::getAssetsId(string frameLabel)
 {
 	for(int i=0; i < assetFrameLabels.size(); i++)
 	{
@@ -136,7 +127,7 @@ int ofxFBOImageSequenceLoader::getAssetsId(string frameLabel)
 
 
 //--------------------------------------------------------------
-void ofxFBOImageSequenceLoader::dispose()
+void ofxTextureImageSequenceLoader::dispose()
 {
 	loader.clear();
 

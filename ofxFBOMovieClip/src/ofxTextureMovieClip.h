@@ -2,25 +2,25 @@
 #pragma once
 
 
-#include "ofxFBOImageSequenceLoader.h"
+#include "ofxTextureImageSequenceLoader.h"
 #include "ofMain.h"
 
 #define STEP_STOP 0
 #define STEP_FORWARD 1
 #define STEP_REVERSE 2
 
-class ofxFBOMovieClip
+class ofxTextureMovieClip
 	{
 	public:
 
-		ofxFBOMovieClip();
+		ofxTextureMovieClip();
 
 		// initialisation
-		void init(ofxFBOImageSequenceLoader* fboIs, float fRate);
+		void init(ofxTextureImageSequenceLoader* texIs, float fRate);
 		void setFrameRate(float fr);
 
 		// main ingrediant
-		ofxFBOImageSequenceLoader* fboImageSequence;
+		ofxTextureImageSequenceLoader* textureImageSequence;
 
 		// timeline controls
 		void play();
@@ -54,8 +54,8 @@ class ofxFBOMovieClip
 		void stepForward();
 
 		// draw with texture returns
-		ofFbo*& getFrameAtPercent(float percent);
-		ofFbo*& getFrame();
+		ofTexture*& getFrameAtPercent(float percent);
+		ofTexture*& getFrame();
 
 		// framerates
 		float frameRate;
