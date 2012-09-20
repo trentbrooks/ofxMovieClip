@@ -5,37 +5,36 @@ ofxTextureMovieClip::ofxTextureMovieClip(){
 	playheadCount = 0;
 	reversePlayheadCount = 0;
 	playMode = 1;
-	frameRate = 30.0f;
+	frameInterval = 30.0f;
 	frameLabelId = 0;
     position = ofPoint(0,0);
 }
 
-//--------------------------------------------------------------
-void ofxTextureMovieClip::init(ofxTextureImageSequenceLoader* texIs, float fRate)
+void ofxTextureMovieClip::init(ofxTextureImageSequenceLoader* texIs, float frameInterval)
 {
 	this->textureImageSequence = texIs;
-	setFrameRate(fRate);
+	setFrameInterval(frameInterval);
 }
 
 //--------------------------------------------------------------
-void ofxTextureMovieClip::setFrameRate(float fr)
+void ofxTextureMovieClip::setFrameInterval(float frameInterval)
 {
-	userSelectFrameRate = fr;
-	frameRate = (ofGetFrameRate() / userSelectFrameRate) * ofGetFrameRate();
+    this->frameInterval = frameInterval;
 }
+
 
 
 //--------------------------------------------------------------
 void ofxTextureMovieClip::stepForward()
 {
-	playheadCount = (playheadCount + 1) % (int)frameRate; 
+	playheadCount = (playheadCount + 1) % (int)frameInterval; 
 }
 
 //--------------------------------------------------------------
 void ofxTextureMovieClip::stepReverse()
 {
-	reversePlayheadCount = (reversePlayheadCount + 1) % (int)frameRate;
-	playheadCount = frameRate - reversePlayheadCount - 1;
+	reversePlayheadCount = (reversePlayheadCount + 1) % (int)frameInterval;
+	playheadCount = frameInterval - reversePlayheadCount - 1;
 }
 
 
@@ -50,7 +49,7 @@ void ofxTextureMovieClip::play()
 void ofxTextureMovieClip::reverse()
 {
 	// need to reswap reversePlayheadCount if playing
-	reversePlayheadCount = frameRate - playheadCount;
+	reversePlayheadCount = frameInterval - playheadCount;
 	playMode = STEP_REVERSE;
 }
 
@@ -71,14 +70,14 @@ void ofxTextureMovieClip::restart()
 void ofxTextureMovieClip::gotoAndPlay(int frameNumber)
 {
 	playMode = STEP_FORWARD;
-	playheadCount = (ofClamp(float(frameNumber-1), 0.0f,textureImageSequence->assetCollections[frameLabelId].size()) / textureImageSequence->assetCollections[frameLabelId].size()) * frameRate;
+	playheadCount = (ofClamp(float(frameNumber-1), 0.0f,textureImageSequence->assetCollections[frameLabelId].size()) / textureImageSequence->assetCollections[frameLabelId].size()) * frameInterval;
 }
 
 //--------------------------------------------------------------
 void ofxTextureMovieClip::gotoAndStop(int frameNumber)
 {
 	playMode = STEP_STOP;
-	playheadCount = (ofClamp(float(frameNumber), 0.0f, textureImageSequence->assetCollections[frameLabelId].size()) / textureImageSequence->assetCollections[frameLabelId].size()) * frameRate;
+	playheadCount = (ofClamp(float(frameNumber), 0.0f, textureImageSequence->assetCollections[frameLabelId].size()) / textureImageSequence->assetCollections[frameLabelId].size()) * frameInterval;
 }
 
 //--------------------------------------------------------------
@@ -151,13 +150,13 @@ void ofxTextureMovieClip::drawFrame()
 }
 
 //--------------------------------------------------------------
-void ofxTextureMovieClip::drawFrame(int x, int y)
+void ofxTextureMovieClip::drawFrame(float x, float y)
 {	
 	getFrame()->draw(x, y);
 }
 
 //--------------------------------------------------------------
-void ofxTextureMovieClip::drawFrame(int x, int y, float w, float h)
+void ofxTextureMovieClip::drawFrame(float x, float y, float w, float h)
 {	
 	getFrame()->draw(x, y, w, h);
 }
@@ -166,7 +165,7 @@ void ofxTextureMovieClip::drawFrame(int x, int y, float w, float h)
 ofTexture*& ofxTextureMovieClip::getFrame()
 {
 	tick(); // now gets called whenever a getFrame is requested instead of manually	
-	return getFrameAtPercent(playheadCount / frameRate);
+	return getFrameAtPercent(playheadCount / frameInterval);
 }
 
 //--------------------------------------------------------------

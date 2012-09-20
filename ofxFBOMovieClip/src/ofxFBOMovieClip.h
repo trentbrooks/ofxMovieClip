@@ -16,9 +16,10 @@ class ofxFBOMovieClip
 		ofxFBOMovieClip();
 
 		// initialisation
-		void init(ofxFBOImageSequenceLoader* fboIs, float fRate);
-		void setFrameRate(float fr);
-
+		void init(ofxFBOImageSequenceLoader* fboIs, float frameInterval);
+		void setFrameInterval(float frameInterval);
+        float frameInterval; // 1.0f = 1/60th of a second, 60fps, 60.0f = 60/60th, 1fps
+        
 		// main ingrediant
 		ofxFBOImageSequenceLoader* fboImageSequence;
 
@@ -57,11 +58,7 @@ class ofxFBOMovieClip
 		ofFbo*& getFrameAtPercent(float percent);
 		ofFbo*& getFrame();
 
-		// framerates
-		float frameRate;
-		float userSelectFrameRate;
-
-		// timeline properties
+        // timeline properties
 		int frameLabelId;
 		int playheadCount;
 		int reversePlayheadCount;

@@ -13,7 +13,7 @@ ofxFBOImageSequenceLoader is similar to and inspired by FlightPhase's http://www
 	fis.loadAndCreateSequence("frogs");
 	fis.loadAndCreateSequence("horses");
 
-	// initialise a movie clip, passing a reference to the ofxFBOImageSequenceLoader, and desired frame rate for the image sequence
+	// initialise a movie clip, passing a reference to the ofxFBOImageSequenceLoader, and desired frame interval for the image sequence
 	ofxFBOMovieClip mc;
 	mc.init(&fis, 30.0f);
 

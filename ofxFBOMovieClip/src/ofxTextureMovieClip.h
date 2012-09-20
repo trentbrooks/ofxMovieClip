@@ -16,8 +16,9 @@ class ofxTextureMovieClip
 		ofxTextureMovieClip();
 
 		// initialisation
-		void init(ofxTextureImageSequenceLoader* texIs, float fRate);
-		void setFrameRate(float fr);
+		void init(ofxTextureImageSequenceLoader* texIs, float frameInterval);
+		void setFrameInterval(float frameInterval);
+        float frameInterval; // 1.0f = 1/60th of a second, 60fps, 60.0f = 60/60th, 1fps
 
 		// main ingrediant
 		ofxTextureImageSequenceLoader* textureImageSequence;
@@ -40,12 +41,12 @@ class ofxTextureMovieClip
 
 		// display
 		void drawFrame();
-        void drawFrame(int x, int y);
-		void drawFrame(int x, int y, float w, float h);
+        void drawFrame(float x, float y);
+		void drawFrame(float x, float y, float w, float h);
 
 		// cleanup
 		void dispose();
-
+        
 	protected:
 
 		// update methods
@@ -56,10 +57,6 @@ class ofxTextureMovieClip
 		// draw with texture returns
 		ofTexture*& getFrameAtPercent(float percent);
 		ofTexture*& getFrame();
-
-		// framerates
-		float frameRate;
-		float userSelectFrameRate;
 
 		// timeline properties
 		int frameLabelId;

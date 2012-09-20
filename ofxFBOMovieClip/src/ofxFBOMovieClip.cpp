@@ -5,37 +5,36 @@ ofxFBOMovieClip::ofxFBOMovieClip(){
 	playheadCount = 0;
 	reversePlayheadCount = 0;
 	playMode = 1;
-	frameRate = 30.0f;
+	frameInterval = 30.0f;
 	frameLabelId = 0;
     position = ofPoint(0,0);
 }
 
 //--------------------------------------------------------------
-void ofxFBOMovieClip::init(ofxFBOImageSequenceLoader* fboIs, float fRate)
+void ofxFBOMovieClip::init(ofxFBOImageSequenceLoader* fboIs, float frameInterval)
 {
 	this->fboImageSequence = fboIs;
-	setFrameRate(fRate);
+	setFrameInterval(frameInterval);
 }
 
 //--------------------------------------------------------------
-void ofxFBOMovieClip::setFrameRate(float fr)
+void ofxFBOMovieClip::setFrameInterval(float frameInterval)
 {
-	userSelectFrameRate = fr;
-	frameRate = (ofGetFrameRate() / userSelectFrameRate) * ofGetFrameRate();
+    this->frameInterval = frameInterval;
 }
 
 
 //--------------------------------------------------------------
 void ofxFBOMovieClip::stepForward()
 {
-	playheadCount = (playheadCount + 1) % (int)frameRate; 
+	playheadCount = (playheadCount + 1) % (int)frameInterval; 
 }
 
 //--------------------------------------------------------------
 void ofxFBOMovieClip::stepReverse()
 {
-	reversePlayheadCount = (reversePlayheadCount + 1) % (int)frameRate;
-	playheadCount = frameRate - reversePlayheadCount - 1;
+	reversePlayheadCount = (reversePlayheadCount + 1) % (int)frameInterval;
+	playheadCount = frameInterval - reversePlayheadCount - 1;
 }
 
 
@@ -50,7 +49,7 @@ void ofxFBOMovieClip::play()
 void ofxFBOMovieClip::reverse()
 {
 	// need to reswap reversePlayheadCount if playing
-	reversePlayheadCount = frameRate - playheadCount;
+	reversePlayheadCount = frameInterval - playheadCount;
 	playMode = STEP_REVERSE;
 }
 
@@ -71,14 +70,14 @@ void ofxFBOMovieClip::restart()
 void ofxFBOMovieClip::gotoAndPlay(int frameNumber)
 {
 	playMode = STEP_FORWARD;
-	playheadCount = (ofClamp(float(frameNumber-1), 0.0f,fboImageSequence->assetCollections[frameLabelId].size()) / fboImageSequence->assetCollections[frameLabelId].size()) * frameRate;
+	playheadCount = (ofClamp(float(frameNumber-1), 0.0f,fboImageSequence->assetCollections[frameLabelId].size()) / fboImageSequence->assetCollections[frameLabelId].size()) * frameInterval;
 }
 
 //--------------------------------------------------------------
 void ofxFBOMovieClip::gotoAndStop(int frameNumber)
 {
 	playMode = STEP_STOP;
-	playheadCount = (ofClamp(float(frameNumber), 0.0f, fboImageSequence->assetCollections[frameLabelId].size()) / fboImageSequence->assetCollections[frameLabelId].size()) * frameRate;
+	playheadCount = (ofClamp(float(frameNumber), 0.0f, fboImageSequence->assetCollections[frameLabelId].size()) / fboImageSequence->assetCollections[frameLabelId].size()) * frameInterval;
 }
 
 //--------------------------------------------------------------
@@ -166,7 +165,7 @@ void ofxFBOMovieClip::drawFrame(int x, int y, float w, float h)
 ofFbo*& ofxFBOMovieClip::getFrame()
 {
 	tick(); // now gets called whenever a getFrame is requested instead of manually	
-	return getFrameAtPercent(playheadCount / frameRate);
+	return getFrameAtPercent(playheadCount / frameInterval);
 }
 
 //--------------------------------------------------------------
