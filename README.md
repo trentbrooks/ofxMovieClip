@@ -1,6 +1,6 @@
 ofxFBOMovieClip & ofxFBOImageSequenceLoader are a set of helper classes for loading and controlling image sequences as FBO textures. These were created to add simple timeline control similar to Flash ( play(), stop(), gotoAndPlay(), etc ). Works with Openframeworks 007.
 
-Now includes ofxTextureMovieClip & ofxTextureImageSequence for using textures instead of FBO's.
+Now includes ofxTextureMovieClip & ofxTextureImageSequence for using textures instead of FBO's. Next will be ofPixels for very large image sequences.
 
 ## Credit ##
 ofxFBOImageSequenceLoader is similar to and inspired by FlightPhase's http://www.flightphase.com ofxImageSequence.
@@ -13,9 +13,10 @@ ofxFBOImageSequenceLoader is similar to and inspired by FlightPhase's http://www
 	fis.loadAndCreateSequence("frogs");
 	fis.loadAndCreateSequence("horses");
 
-	// initialise a movie clip, passing a reference to the ofxFBOImageSequenceLoader, and desired frame interval for the image sequence
+	// initialise a movie clip, passing a reference to the ofxFBOImageSequenceLoader, and desired frame speed/rate for the image sequence
+	// 2nd parameter (frameSpeed): 1.0f or 60.0f / ofGetFrameRate() plays back at apps frame rate, 0.5f or or 30.0f / ofGetFrameRate() plays back at half speed, 2.0f or 120.0 / ofGetFrameRate() plays back twice as fast as app frame rate
 	ofxFBOMovieClip mc;
-	mc.init(&fis, 30.0f);
+	mc.init(&fis, 30.0f / ofGetFrameRate()); 
 
 	// control the movie clip timeline from keyboard events/mouse events etc.
 	mc.gotoAndPlay("horses");

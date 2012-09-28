@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
     
-    ofSetFrameRate(30);
+    ofSetFrameRate(60);
     
     
     // load a folder of images as image sequence -optional 2nd paramter is frame label, if empty it defaults to folder name. eg "frogs"
@@ -16,9 +16,9 @@ void testApp::setup(){
     //fis.loadAndCreateSequence("horseWalk", 11, "horses/frame", "png", 2);
     
     
-    
-    // create as many movieclips as you want and pass in a reference to the ofxFBOImageSequenceLoader & desired frame rate
-    mc.init(&imageSequence, 30.0f);
+    // create as many movieclips as you want and pass in a reference to the ofxFBOImageSequenceLoader & desired frame rate/speed
+    // 2nd parameter (frameSpeed): 1.0f or 60.0f / ofGetFrameRate() plays back at apps frame rate, 0.5f or or 30.0f / ofGetFrameRate() plays back at half speed, 2.0f or 120.0 / ofGetFrameRate() plays back twice as fast as app frame rate
+    mc.init(&imageSequence, 20.0f / ofGetFrameRate()); // eg. 20fps
 	mc.gotoAndPlay("frogs");
     
 }
@@ -30,8 +30,11 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    
-    //ofBackground(255);
+        
+    ofSetColor(255);
+    ofEnableAlphaBlending();
+    mc.drawFrame(250, 300);
+    ofDisableAlphaBlending();
     
     ofSetColor(0);
     ofDrawBitmapString("Press 1 to play frog animation",20,20);
@@ -39,13 +42,6 @@ void testApp::draw(){
     ofDrawBitmapString("Press 3 to reverse",20,60);
     ofDrawBitmapString("Press 4 to stop",20,80);
     ofDrawBitmapString("Press 5 to resume",20,100);
-    
-    
-    ofSetColor(255);
-    ofEnableAlphaBlending();
-    mc.drawFrame(250, 300);
-    ofDisableAlphaBlending();
-    
 }
 
 //--------------------------------------------------------------

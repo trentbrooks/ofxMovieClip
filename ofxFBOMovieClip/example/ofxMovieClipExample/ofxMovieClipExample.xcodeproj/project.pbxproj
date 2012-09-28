@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A7601F9C15D4988F003F1289 /* ofxFBOImageSequenceLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7601F8C15D4988F003F1289 /* ofxFBOImageSequenceLoader.cpp */; };
-		A7601F9D15D4988F003F1289 /* ofxFBOMovieClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7601F8E15D4988F003F1289 /* ofxFBOMovieClip.cpp */; };
-		A7601F9E15D4988F003F1289 /* ofxTextureImageSequenceLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7601F9115D4988F003F1289 /* ofxTextureImageSequenceLoader.cpp */; };
-		A7601F9F15D4988F003F1289 /* ofxTextureMovieClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7601F9315D4988F003F1289 /* ofxTextureMovieClip.cpp */; };
+		A728F60C161569AC0051AFF4 /* ofxFBOImageSequenceLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A728F5FC161569AB0051AFF4 /* ofxFBOImageSequenceLoader.cpp */; };
+		A728F60D161569AC0051AFF4 /* ofxFBOMovieClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A728F5FE161569AB0051AFF4 /* ofxFBOMovieClip.cpp */; };
+		A728F60E161569AC0051AFF4 /* ofxTextureImageSequenceLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A728F601161569AB0051AFF4 /* ofxTextureImageSequenceLoader.cpp */; };
+		A728F60F161569AC0051AFF4 /* ofxTextureMovieClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A728F603161569AB0051AFF4 /* ofxTextureMovieClip.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -61,15 +61,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A7601F8C15D4988F003F1289 /* ofxFBOImageSequenceLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFBOImageSequenceLoader.cpp; sourceTree = "<group>"; };
-		A7601F8D15D4988F003F1289 /* ofxFBOImageSequenceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFBOImageSequenceLoader.h; sourceTree = "<group>"; };
-		A7601F8E15D4988F003F1289 /* ofxFBOMovieClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFBOMovieClip.cpp; sourceTree = "<group>"; };
-		A7601F8F15D4988F003F1289 /* ofxFBOMovieClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFBOMovieClip.h; sourceTree = "<group>"; };
-		A7601F9015D4988F003F1289 /* ofxMovieClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMovieClip.h; sourceTree = "<group>"; };
-		A7601F9115D4988F003F1289 /* ofxTextureImageSequenceLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTextureImageSequenceLoader.cpp; sourceTree = "<group>"; };
-		A7601F9215D4988F003F1289 /* ofxTextureImageSequenceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextureImageSequenceLoader.h; sourceTree = "<group>"; };
-		A7601F9315D4988F003F1289 /* ofxTextureMovieClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTextureMovieClip.cpp; sourceTree = "<group>"; };
-		A7601F9415D4988F003F1289 /* ofxTextureMovieClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextureMovieClip.h; sourceTree = "<group>"; };
+		A728F5FC161569AB0051AFF4 /* ofxFBOImageSequenceLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFBOImageSequenceLoader.cpp; sourceTree = "<group>"; };
+		A728F5FD161569AB0051AFF4 /* ofxFBOImageSequenceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFBOImageSequenceLoader.h; sourceTree = "<group>"; };
+		A728F5FE161569AB0051AFF4 /* ofxFBOMovieClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFBOMovieClip.cpp; sourceTree = "<group>"; };
+		A728F5FF161569AB0051AFF4 /* ofxFBOMovieClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFBOMovieClip.h; sourceTree = "<group>"; };
+		A728F600161569AB0051AFF4 /* ofxMovieClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMovieClip.h; sourceTree = "<group>"; };
+		A728F601161569AB0051AFF4 /* ofxTextureImageSequenceLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTextureImageSequenceLoader.cpp; sourceTree = "<group>"; };
+		A728F602161569AB0051AFF4 /* ofxTextureImageSequenceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextureImageSequenceLoader.h; sourceTree = "<group>"; };
+		A728F603161569AB0051AFF4 /* ofxTextureMovieClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTextureMovieClip.cpp; sourceTree = "<group>"; };
+		A728F604161569AB0051AFF4 /* ofxTextureMovieClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextureMovieClip.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -118,27 +118,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A7601F4215D4988F003F1289 /* ofxFBOMovieClip */ = {
+		A728F5B3161569AB0051AFF4 /* ofxFBOMovieClip */ = {
 			isa = PBXGroup;
 			children = (
-				A7601F8B15D4988F003F1289 /* src */,
+				A728F5FB161569AB0051AFF4 /* src */,
 			);
 			name = ofxFBOMovieClip;
 			path = ../../../addons/ofxFBOMovieClip;
 			sourceTree = "<group>";
 		};
-		A7601F8B15D4988F003F1289 /* src */ = {
+		A728F5FB161569AB0051AFF4 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				A7601F8C15D4988F003F1289 /* ofxFBOImageSequenceLoader.cpp */,
-				A7601F8D15D4988F003F1289 /* ofxFBOImageSequenceLoader.h */,
-				A7601F8E15D4988F003F1289 /* ofxFBOMovieClip.cpp */,
-				A7601F8F15D4988F003F1289 /* ofxFBOMovieClip.h */,
-				A7601F9015D4988F003F1289 /* ofxMovieClip.h */,
-				A7601F9115D4988F003F1289 /* ofxTextureImageSequenceLoader.cpp */,
-				A7601F9215D4988F003F1289 /* ofxTextureImageSequenceLoader.h */,
-				A7601F9315D4988F003F1289 /* ofxTextureMovieClip.cpp */,
-				A7601F9415D4988F003F1289 /* ofxTextureMovieClip.h */,
+				A728F5FC161569AB0051AFF4 /* ofxFBOImageSequenceLoader.cpp */,
+				A728F5FD161569AB0051AFF4 /* ofxFBOImageSequenceLoader.h */,
+				A728F5FE161569AB0051AFF4 /* ofxFBOMovieClip.cpp */,
+				A728F5FF161569AB0051AFF4 /* ofxFBOMovieClip.h */,
+				A728F600161569AB0051AFF4 /* ofxMovieClip.h */,
+				A728F601161569AB0051AFF4 /* ofxTextureImageSequenceLoader.cpp */,
+				A728F602161569AB0051AFF4 /* ofxTextureImageSequenceLoader.h */,
+				A728F603161569AB0051AFF4 /* ofxTextureMovieClip.cpp */,
+				A728F604161569AB0051AFF4 /* ofxTextureMovieClip.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -146,7 +146,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				A7601F4215D4988F003F1289 /* ofxFBOMovieClip */,
+				A728F5B3161569AB0051AFF4 /* ofxFBOMovieClip */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -313,10 +313,10 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
-				A7601F9C15D4988F003F1289 /* ofxFBOImageSequenceLoader.cpp in Sources */,
-				A7601F9D15D4988F003F1289 /* ofxFBOMovieClip.cpp in Sources */,
-				A7601F9E15D4988F003F1289 /* ofxTextureImageSequenceLoader.cpp in Sources */,
-				A7601F9F15D4988F003F1289 /* ofxTextureMovieClip.cpp in Sources */,
+				A728F60C161569AC0051AFF4 /* ofxFBOImageSequenceLoader.cpp in Sources */,
+				A728F60D161569AC0051AFF4 /* ofxFBOMovieClip.cpp in Sources */,
+				A728F60E161569AC0051AFF4 /* ofxTextureImageSequenceLoader.cpp in Sources */,
+				A728F60F161569AC0051AFF4 /* ofxTextureMovieClip.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
