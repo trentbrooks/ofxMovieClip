@@ -7,7 +7,7 @@ ofxTextureImageSequenceLoader::ofxTextureImageSequenceLoader(){
 
 
 //--------------------------------------------------------------
-void ofxTextureImageSequenceLoader::loadAndCreateSequence(string folderPath, string frameLabel)
+void ofxTextureImageSequenceLoader::loadAndCreateSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight)
 {
     ofDirectory dir;
     int numFiles = dir.listDir(folderPath);
@@ -26,6 +26,7 @@ void ofxTextureImageSequenceLoader::loadAndCreateSequence(string folderPath, str
             
             // load and allocate memory for images
             loader.loadImage(dir.getPath(i));
+            if(resizeWidth > 0) loader.resize(resizeWidth, resizeHeight);
             cout << dir.getPath(i) << endl;
             
             // setup texture
@@ -57,7 +58,7 @@ void ofxTextureImageSequenceLoader::loadAndCreateSequence(string folderPath, str
 }
 
 
-void ofxTextureImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom)
+void ofxTextureImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom, int resizeWidth, int resizeHeight)
 {
 
 	//vector<ofTexture*> newAssets;

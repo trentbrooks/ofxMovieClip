@@ -43,6 +43,8 @@ class ofxTextureMovieClip
         void drawFrame(float x, float y);
 		void drawFrame(float x, float y, float w, float h);
 
+		ofTexture*& getFrame();
+
         ofxTextureAssetsAndLabel* activeAsset;
         
 	protected:
@@ -54,7 +56,7 @@ class ofxTextureMovieClip
 
 		// draw with texture returns
 		//ofTexture*& getFrameAtPercent(float percent);
-		ofTexture*& getFrame();
+		
 
 		// timeline properties
 		int frameLabelId; // corresponds with a frameLabel

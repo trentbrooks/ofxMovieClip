@@ -42,6 +42,8 @@ public:
     void drawFrame();
     void drawFrame(float x, float y);
     void drawFrame(float x, float y, float w, float h);
+
+    ofFbo*& getFrame();
     
     ofxFBOAssetsAndLabel* activeAsset;
     
@@ -54,7 +56,7 @@ protected:
     
     // draw with texture returns
     //ofTexture*& getFrameAtPercent(float percent);
-    ofFbo*& getFrame();
+    
     
     // timeline properties
     int frameLabelId; // corresponds with a frameLabel

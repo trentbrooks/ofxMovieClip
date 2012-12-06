@@ -167,22 +167,22 @@ void ofxFBOMovieClip::setPosition(ofPoint pos)
 //--------------------------------------------------------------
 void ofxFBOMovieClip::drawFrame()
 {	
-	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 	getFrame()->draw(position.x, position.y);
+	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 }
 
 //--------------------------------------------------------------
 void ofxFBOMovieClip::drawFrame(float x, float y)
 {	
-	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 	getFrame()->draw(x, y);
+	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 }
 
 //--------------------------------------------------------------
 void ofxFBOMovieClip::drawFrame(float x, float y, float w, float h)
 {	
-	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 	getFrame()->draw(x, y, w, h);
+	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 }
 
 //--------------------------------------------------------------
@@ -190,7 +190,7 @@ ofFbo*& ofxFBOMovieClip::getFrame()
 {
 	//return getFrameAtPercent(playheadCount / frameInterval);
     //cout << frameLabelId << "  :  " << playheadCount << endl;
-    return textureImageSequence->assetCollections[frameLabelId]->imageFrames[playheadCount];
+    return activeAsset->imageFrames[playheadCount];
 }
 
 //--------------------------------------------------------------

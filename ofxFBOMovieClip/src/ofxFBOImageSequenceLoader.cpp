@@ -7,7 +7,7 @@ ofxFBOImageSequenceLoader::ofxFBOImageSequenceLoader(){
 
 
 //--------------------------------------------------------------
-void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string frameLabel)
+void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight)
 {
     ofDirectory dir;
     int numFiles = dir.listDir(folderPath);
@@ -31,6 +31,7 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string 
 
             // load and allocate memory for images
             loader.loadImage(dir.getPath(i));
+            if(resizeWidth > 0) loader.resize(resizeWidth, resizeHeight);
             cout << dir.getPath(i) << endl;
 
             // setup new fbo
@@ -73,7 +74,7 @@ void ofxFBOImageSequenceLoader::loadAndCreateSequence(string folderPath, string 
 }
 
 
-void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom)
+void ofxFBOImageSequenceLoader::loadAndCreateSequence(string frameLabel, int nImages, string filenamePrefix, string filetype, int numDigits, int startFrom, int resizeWidth, int resizeHeight)
 {
 
 	//vector<ofFbo*> newAssets;
