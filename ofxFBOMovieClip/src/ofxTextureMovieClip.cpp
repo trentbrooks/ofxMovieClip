@@ -167,25 +167,28 @@ void ofxTextureMovieClip::setPosition(ofPoint pos)
 //--------------------------------------------------------------
 void ofxTextureMovieClip::drawFrame()
 {	
+	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 	getFrame()->draw(position.x, position.y);
 }
 
 //--------------------------------------------------------------
 void ofxTextureMovieClip::drawFrame(float x, float y)
 {	
+	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 	getFrame()->draw(x, y);
 }
 
 //--------------------------------------------------------------
 void ofxTextureMovieClip::drawFrame(float x, float y, float w, float h)
 {	
+	tick(); // now gets called whenever a drawFrame is requested instead of manually	
 	getFrame()->draw(x, y, w, h);
 }
 
 //--------------------------------------------------------------
 ofTexture*& ofxTextureMovieClip::getFrame()
 {
-	tick(); // now gets called whenever a getFrame is requested instead of manually	
+	
 	//return getFrameAtPercent(playheadCount / frameInterval);
     //cout << frameLabelId << "  :  " << playheadCount << endl;
     return textureImageSequence->assetCollections[frameLabelId]->imageFrames[playheadCount];
