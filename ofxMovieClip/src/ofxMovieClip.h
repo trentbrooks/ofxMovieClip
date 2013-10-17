@@ -75,6 +75,7 @@ class ofxMovieClip
         
         // only required by ofxPixelMovieClip
 		ofTexture* pixelsTexture;
+        int playheadCopy;
 		
 };
 

@@ -10,6 +10,7 @@ ofxMovieClip<ImageType>::ofxMovieClip(){
     frameSpeed = defaultFrameSpeed = 1.0f;
 	frameLabelId = 0;
     position = ofPoint(0,0);
+    playheadCopy = -1;
     activeAsset = NULL;
 }
 
@@ -28,7 +29,7 @@ template<>
 void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequence, float frameSpeed)
 {
     pixelsTexture = new ofTexture();
-    pixelsTexture->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    //pixelsTexture->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
 	this->imageSequence = imageSequence;
     activeAsset = imageSequence->assetCollections[frameLabelId];
@@ -231,10 +232,17 @@ ofTexture* ofxMovieClip<ofFbo>::getFramePtr() {
 // template specialisation: ofPixels
 template<>
 ofTexture* ofxMovieClip<ofPixels>::getFramePtr() {
-    pixelsTexture->clear();
-    ofPixels* px = activeAsset->imageFrames[playheadCount];
-    pixelsTexture->allocate(px->getWidth(), px->getHeight(), GL_RGBA);
-    pixelsTexture->loadData(*px);
+    
+    // only allocate + load if the playhead has changed, otherwise return cached copy
+    if(playheadCopy != int(playheadCount)) {
+        //pixelsTexture->clear();
+        ofPixels* px = activeAsset->imageFrames[playheadCount];
+        if(!pixelsTexture->isAllocated()) pixelsTexture->allocate(*px); //->getWidth(), px->getHeight(), GL_RGB);        
+        pixelsTexture->loadData(*px);
+        playheadCopy = int(playheadCount);
+    }
+    
+    
     return pixelsTexture;
 }
 
