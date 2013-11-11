@@ -1,4 +1,4 @@
-ofxMovieClip & ofxImageSequenceLoader are a set of helper classes for loading and controlling image sequences. These were created to add simple timeline control similar to Flash ( play(), stop(), gotoAndPlay(), etc ). Works with Openframeworks 0073.
+ofxMovieClip & ofxImageSequenceLoader are a set of helper classes for loading and controlling image sequences. These were created to add simple timeline control similar to Flash ( play(), stop(), gotoAndPlay(), etc ).
 
 Now templated with ofxTextureMovieClip/ofxTextureImageSequence for ofTexture's, ofxFboMovieClip/ofxFboImageSequence for ofFbo's, and ofxPixelsMovieClip/ofxPixelsImageSequence for ofPixels. ofPixels are good for very large image sequences, stored on disk instead of graphics card.
 
@@ -22,6 +22,6 @@ ofxImageSequenceLoader is similar to and inspired by FlightPhase's http://www.fl
 	mc.gotoAndPlay("horses");
 
 	// in your main draw loop
-	mc.drawFrame(0, 0);
+	mc.draw(0, 0);
 
 Trent

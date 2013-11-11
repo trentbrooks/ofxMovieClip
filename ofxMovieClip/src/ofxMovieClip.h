@@ -5,9 +5,9 @@
 #include "ofxImageSequenceLoader.h"
 #include "ofMain.h"
 
-#define STEP_STOP 0
-#define STEP_FORWARD 1
-#define STEP_REVERSE 2
+//#define STEP_STOP 0
+//#define STEP_FORWARD 1
+//#define STEP_REVERSE 2
 
 /*
  ofxMovieClip
@@ -16,18 +16,21 @@
  */
 
 template<typename ImageType> // ofTexture, or ofFbo, or ofPixels
-class ofxMovieClip
-	{
+class ofxMovieClip {
 	public:
         
+        enum PlaybackMode { STEP_STOP, STEP_FORWARD, STEP_REVERSE };
+    
+    
 		ofxMovieClip();
 
 		// initialisation
 		void init(ofxImageSequenceLoader<ImageType>* texIs, float frameSpeed);
-        float frameSpeed; // 1.0f = 60.0f/ofGetFrameRate() (same as apps frame rate), 0.5f = 30.0f/ofGetFrameRate() (half the apps frame rate), 2.0f = 120.0f/ofGetFrameRate() (double playback speed)
+        
 
 		// main ingrediant
 		ofxImageSequenceLoader<ImageType>* imageSequence;
+        MovieClipAssetsAndLabel<ImageType>* activeAsset;
 
 		// timeline controls
 		void play();
@@ -41,22 +44,32 @@ class ofxMovieClip
 		void gotoAndPlay(string frameLabel, int frameNumber);
 		void gotoAndStop(string frameLabel, int frameNumber);
 
+        // display position
         void setPosition(int x, int y);
-        void setPosition(ofPoint pos);
-        ofPoint position;
+        ofPoint* getPositionPtr() { return &position; };
+        ofPoint getPosition() { return position; };
 
-		// display
-		void drawFrame();
-        void drawFrame(float x, float y);
-		void drawFrame(float x, float y, float w, float h);
+		// drawing
+		void draw();
+        void draw(float x, float y);
+		void draw(float x, float y, float w, float h);
+        // deprecated draw methods converted to inline- keeping here for legacy projects
+        void drawFrame() { draw(); };
+        void drawFrame(float x, float y) { draw(x,y); };
+		void drawFrame(float x, float y, float w, float h) { draw(x,y,w,h); };
+        
+        ofTexture* getTexturePtr();
+        ofTexture* getFramePtr() { return getTexturePtr(); }; // deprecated
+        
+        // useful playback setters/getters
+        float* getFrameSpeedPtr() { return &frameSpeed; };
+        float getFrameSpeed() { return frameSpeed; };
+        void setFrameSpeed(float speed) { frameSpeed = speed; };
+        PlaybackMode getPlaybackMode() { return playMode; };
+        float* getPlayheadPtr() { return (playMode == STEP_FORWARD) ? &playheadCount : &reversePlayheadCount; };
+        float getPlayhead() { return (playMode == STEP_FORWARD) ? playheadCount : reversePlayheadCount; };
+        void setPlayhead(float frameNum) { (playMode == STEP_FORWARD) ? playheadCount = frameNum : reversePlayheadCount = frameNum; };
 
-        ofTexture* getFramePtr();
-        
-        MovieClipAssetsAndLabel<ImageType>* activeAsset;
-        
-        float playheadCount;
-        float reversePlayheadCount;
-		int playMode; // 0 = stopped, 1 = playing, 2 = reverse
         
 	protected:
 
@@ -67,9 +80,11 @@ class ofxMovieClip
 
 		// draw with texture returns
 		//ofTexture*& getFrameAtPercent(float percent);
+        
+        // display position
+        ofPoint position;
 
-		// timeline properties
-		int frameLabelId; // corresponds with a frameLabel        
+		// playback speed		     
         float frameIntervalTicker;
         float defaultFrameSpeed;
         
@@ -77,6 +92,12 @@ class ofxMovieClip
 		ofTexture* pixelsTexture;
         int playheadCopy;
 		
+        // playback
+        float frameSpeed; // 1.0f = 60.0f/ofGetFrameRate() (same as apps frame rate), 0.5f = 30.0f/ofGetFrameRate() (half the apps frame rate), 2.0f = 120.0f/ofGetFrameRate() (double playback speed)
+        PlaybackMode playMode; // 0 = stopped, 1 = playing, 2 = reverse
+        float playheadCount;
+        float reversePlayheadCount;
+        int frameLabelId; // corresponds with a frameLabel   
 };
 
 // use these types = ofTexture, ofFbo, ofPixels
@@ -84,3 +105,6 @@ class ofxMovieClip
 typedef ofxMovieClip<ofTexture> ofxTextureMovieClip;
 typedef ofxMovieClip<ofFbo> ofxFboMovieClip;
 typedef ofxMovieClip<ofPixels> ofxPixelsMovieClip;
+
+
+

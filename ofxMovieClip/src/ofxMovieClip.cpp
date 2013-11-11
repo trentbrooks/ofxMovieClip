@@ -5,7 +5,7 @@ template<typename ImageType>
 ofxMovieClip<ImageType>::ofxMovieClip(){
 	playheadCount = 0;
 	reversePlayheadCount = 0;
-	playMode = 1;
+	playMode = STEP_FORWARD;
     frameIntervalTicker = 0.0f; // cumulative
     frameSpeed = defaultFrameSpeed = 1.0f;
 	frameLabelId = 0;
@@ -13,6 +13,7 @@ ofxMovieClip<ImageType>::ofxMovieClip(){
     playheadCopy = -1;
     activeAsset = NULL;
 }
+
 
 template<typename ImageType>
 void ofxMovieClip<ImageType>::init(ofxImageSequenceLoader<ImageType>* imageSequence, float frameSpeed)
@@ -38,41 +39,8 @@ void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequenc
 }
 
 
-//--------------------------------------------------------------
-template<typename ImageType>
-void ofxMovieClip<ImageType>::stepForward()
-{
-    // skipping frames to fast forward
-    if(frameSpeed >= defaultFrameSpeed) {
-        if( (playheadCount += frameSpeed) >= activeAsset->imageFramesSize ) playheadCount = 0;
-    }
-    
-    // slower frame speed requires a ticker
-    else if( (frameIntervalTicker += frameSpeed ) >= defaultFrameSpeed) {
-        frameIntervalTicker = 0;
-        if( (playheadCount += defaultFrameSpeed) >= activeAsset->imageFramesSize ) playheadCount = 0;
-    }
-}
 
-//--------------------------------------------------------------
-template<typename ImageType>
-void ofxMovieClip<ImageType>::stepReverse()
-{
-    
-    // skipping frames to fast forward
-    if(frameSpeed >= defaultFrameSpeed) {
-        if( (playheadCount -= frameSpeed) < 0) playheadCount = activeAsset->imageFramesSize - 1;
-    }
-    
-    // slower frame speed requires a ticker
-    else if( (frameIntervalTicker += frameSpeed ) >= defaultFrameSpeed) {
-        frameIntervalTicker = 0;
-        if( (playheadCount -= defaultFrameSpeed) < 0 ) playheadCount = activeAsset->imageFramesSize - 1;
-    }
-}
-
-
-
+// Play head controls
 //--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::play()
@@ -80,7 +48,6 @@ void ofxMovieClip<ImageType>::play()
 	playMode = STEP_FORWARD;
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::reverse()
 {
@@ -89,14 +56,12 @@ void ofxMovieClip<ImageType>::reverse()
 	playMode = STEP_REVERSE;
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::stop()
 {
 	playMode = STEP_STOP;
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::restart()
 {
@@ -104,7 +69,6 @@ void ofxMovieClip<ImageType>::restart()
 	playheadCount = 0;
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::gotoAndPlay(int frameNumber)
 {
@@ -112,7 +76,6 @@ void ofxMovieClip<ImageType>::gotoAndPlay(int frameNumber)
 	playheadCount = ofClamp(frameNumber, 0, activeAsset->imageFramesSize - 1);
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::gotoAndStop(int frameNumber)
 {
@@ -120,7 +83,6 @@ void ofxMovieClip<ImageType>::gotoAndStop(int frameNumber)
 	playheadCount = ofClamp(frameNumber, 0, activeAsset->imageFramesSize - 1);
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel)
 {
@@ -130,7 +92,6 @@ void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel)
 	playheadCount = 0;
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel)
 {
@@ -140,7 +101,6 @@ void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel)
 	playheadCount = 0;		
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel, int frameNumber)
 {
@@ -149,7 +109,6 @@ void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel, int frameNumber)
 	gotoAndPlay(frameNumber);
 }
 
-//--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel, int frameNumber)
 {
@@ -159,6 +118,31 @@ void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel, int frameNumber)
 }
 
 
+
+//--------------------------------------------------------------
+// Drawing
+template<typename ImageType>
+void ofxMovieClip<ImageType>::draw(){
+    
+	getTexturePtr()->draw(position.x, position.y);
+	tick(); // now gets called whenever a drawFrame is requested instead of manually
+}
+
+template<typename ImageType>
+void ofxMovieClip<ImageType>::draw(float x, float y){
+	getTexturePtr()->draw(x, y);
+	tick(); // now gets called whenever a drawFrame is requested instead of manually
+}
+
+template<typename ImageType>
+void ofxMovieClip<ImageType>::draw(float x, float y, float w, float h){
+	getTexturePtr()->draw(x, y, w, h);
+	tick(); // now gets called whenever a drawFrame is requested instead of manually
+}
+
+
+
+// Updates
 //--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::tick()
@@ -178,6 +162,39 @@ void ofxMovieClip<ImageType>::tick()
 	}
 }
 
+template<typename ImageType>
+void ofxMovieClip<ImageType>::stepForward()
+{
+    // skipping frames to fast forward
+    if(frameSpeed >= defaultFrameSpeed) {
+        if( (playheadCount += frameSpeed) >= activeAsset->imageFramesSize ) playheadCount = 0;
+    }
+    
+    // slower frame speed requires a ticker
+    else if( (frameIntervalTicker += frameSpeed ) >= defaultFrameSpeed) {
+        frameIntervalTicker = 0;
+        if( (playheadCount += defaultFrameSpeed) >= activeAsset->imageFramesSize ) playheadCount = 0;
+    }
+}
+
+template<typename ImageType>
+void ofxMovieClip<ImageType>::stepReverse()
+{
+    
+    // skipping frames to fast forward
+    if(frameSpeed >= defaultFrameSpeed) {
+        if( (playheadCount -= frameSpeed) < 0) playheadCount = activeAsset->imageFramesSize - 1;
+    }
+    
+    // slower frame speed requires a ticker
+    else if( (frameIntervalTicker += frameSpeed ) >= defaultFrameSpeed) {
+        frameIntervalTicker = 0;
+        if( (playheadCount -= defaultFrameSpeed) < 0 ) playheadCount = activeAsset->imageFramesSize - 1;
+    }
+}
+
+
+// Display position
 //--------------------------------------------------------------
 template<typename ImageType>
 void ofxMovieClip<ImageType>::setPosition(int x, int y)
@@ -186,52 +203,23 @@ void ofxMovieClip<ImageType>::setPosition(int x, int y)
     position.y = y;
 }
 
-//--------------------------------------------------------------
-template<typename ImageType>
-void ofxMovieClip<ImageType>::setPosition(ofPoint pos)
-{
-    position = pos;
-}
-
-
-//--------------------------------------------------------------
-template<typename ImageType>
-void ofxMovieClip<ImageType>::drawFrame(){
-	getFramePtr()->draw(position.x, position.y);
-	tick(); // now gets called whenever a drawFrame is requested instead of manually
-}
-
-//--------------------------------------------------------------
-template<typename ImageType>
-void ofxMovieClip<ImageType>::drawFrame(float x, float y){	
-	getFramePtr()->draw(x, y);
-	tick(); // now gets called whenever a drawFrame is requested instead of manually
-}
-
-//--------------------------------------------------------------
-template<typename ImageType>
-void ofxMovieClip<ImageType>::drawFrame(float x, float y, float w, float h){	
-	getFramePtr()->draw(x, y, w, h);
-	tick(); // now gets called whenever a drawFrame is requested instead of manually	
-}
-
 
 //--------------------------------------------------------------
 // template specialisation: ofTexture
 template<>
-ofTexture* ofxMovieClip<ofTexture>::getFramePtr() {
+ofTexture* ofxMovieClip<ofTexture>::getTexturePtr() {
     return activeAsset->imageFrames[playheadCount];
 }
 
 // template specialisation: ofFbo
 template<>
-ofTexture* ofxMovieClip<ofFbo>::getFramePtr() {
+ofTexture* ofxMovieClip<ofFbo>::getTexturePtr() {
     return &activeAsset->imageFrames[playheadCount]->getTextureReference();
 }
 
 // template specialisation: ofPixels
 template<>
-ofTexture* ofxMovieClip<ofPixels>::getFramePtr() {
+ofTexture* ofxMovieClip<ofPixels>::getTexturePtr() {
     
     // only allocate + load if the playhead has changed, otherwise return cached copy
     if(playheadCopy != int(playheadCount)) {
