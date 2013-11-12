@@ -6,7 +6,24 @@ ofxImageSequenceLoader<ImageType>::ofxImageSequenceLoader(){
     assetCollectionSize = 0;
 }
 
-
+template <typename ImageType>
+ofxImageSequenceLoader<ImageType>::~ofxImageSequenceLoader()
+{
+    
+    for (int i = 0; i < assetCollections.size(); i++)
+    {
+        for (int j = 0; j < assetCollections[i]->imageFrames.size(); j++)
+		{
+            delete assetCollections[i]->imageFrames[j];
+        }
+        
+        assetCollections[i]->imageFrames.clear();
+        
+    }
+    
+    assetCollections.clear();
+}
+ 
 //--------------------------------------------------------------
 // template specialisation: ofTexture
 template<>

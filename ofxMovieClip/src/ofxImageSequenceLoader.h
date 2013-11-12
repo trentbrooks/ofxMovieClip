@@ -24,6 +24,7 @@ class ofxImageSequenceLoader {
     
     public:
         ofxImageSequenceLoader();
+        ~ofxImageSequenceLoader();
     
         // loads image sequence  by folder
         void loadAndCreateSequence(string folderPath, string frameLabel = "", int resizeWidth = 0, int resizeHeight = 0);
