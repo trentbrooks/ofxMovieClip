@@ -10,6 +10,8 @@ ofxMovieClip<ImageType>::ofxMovieClip(){
     frameSpeed = defaultFrameSpeed = 1.0f;
 	frameLabelId = 0;
     position = ofPoint(0,0);
+    width= height =-1;
+    isCustomSize = false;
     playheadCopy = -1;
     activeAsset = NULL;
 }
@@ -124,13 +126,20 @@ void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel, int frameNumber)
 template<typename ImageType>
 void ofxMovieClip<ImageType>::draw(){
     
-	getTexturePtr()->draw(position.x, position.y);
+    if(isCustomSize)
+        getTexturePtr()->draw(position.x, position.y, width, height);
+    else
+        getTexturePtr()->draw(position.x, position.y);
 	tick(); // now gets called whenever a drawFrame is requested instead of manually
 }
 
 template<typename ImageType>
 void ofxMovieClip<ImageType>::draw(float x, float y){
-	getTexturePtr()->draw(x, y);
+    
+    if(isCustomSize)
+        getTexturePtr()->draw(x, y, width, height);
+    else
+        getTexturePtr()->draw(x, y);
 	tick(); // now gets called whenever a drawFrame is requested instead of manually
 }
 
@@ -197,12 +206,19 @@ void ofxMovieClip<ImageType>::stepReverse()
 // Display position
 //--------------------------------------------------------------
 template<typename ImageType>
-void ofxMovieClip<ImageType>::setPosition(int x, int y)
+void ofxMovieClip<ImageType>::setPosition(float x, float y)
 {
     position.x = x;
     position.y = y;
 }
 
+template<typename ImageType>
+void ofxMovieClip<ImageType>::setSize(float w, float h) {
+    
+    width = w;
+    height = h;
+    isCustomSize = true;
+}
 
 //--------------------------------------------------------------
 // template specialisation: ofTexture

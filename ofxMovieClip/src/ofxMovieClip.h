@@ -43,11 +43,14 @@ class ofxMovieClip {
 		void gotoAndStop(string frameLabel);
 		void gotoAndPlay(string frameLabel, int frameNumber);
 		void gotoAndStop(string frameLabel, int frameNumber);
+    
+        bool isLastFrame() { return (playheadCount == activeAsset->imageFramesSize-1); };
 
         // display position
-        void setPosition(int x, int y);
+        void setPosition(float x, float y);
         ofPoint* getPositionPtr() { return &position; };
         ofPoint getPosition() { return position; };
+        void setSize(float w, float h);
 
 		// drawing
 		void draw();
@@ -70,7 +73,8 @@ class ofxMovieClip {
         float getPlayhead() { return (playMode == STEP_FORWARD) ? playheadCount : reversePlayheadCount; };
         void setPlayhead(float frameNum) { (playMode == STEP_FORWARD) ? playheadCount = frameNum : reversePlayheadCount = frameNum; };
 
-        
+
+    
 	protected:
 
 		// update methods
@@ -83,8 +87,10 @@ class ofxMovieClip {
         
         // display position
         ofPoint position;
+        float width, height;
+        bool isCustomSize;
 
-		// playback speed		     
+		// playback speed
         float frameIntervalTicker;
         float defaultFrameSpeed;
         
