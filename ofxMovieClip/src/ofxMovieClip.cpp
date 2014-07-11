@@ -13,6 +13,7 @@ ofxMovieClip<ImageType>::ofxMovieClip(){
     width= height =-1;
     isCustomSize = false;
     playheadCopy = -1;
+    loopOnFinish = true;
     activeAsset = NULL;
 }
 
@@ -24,6 +25,12 @@ void ofxMovieClip<ImageType>::init(ofxImageSequenceLoader<ImageType>* imageSeque
     activeAsset = imageSequence->assetCollections[frameLabelId];
     
     this->frameSpeed = frameSpeed;
+    
+    // auto grab the width and height of the first asset
+    if(width == -1 && height == -1 && activeAsset->imageFrames.size() > 0) {
+        width = activeAsset->imageFrames[0]->getWidth();
+        height = activeAsset->imageFrames[0]->getWidth();
+    }
 }
 
 //--------------------------------------------------------------
@@ -38,6 +45,12 @@ void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequenc
     activeAsset = imageSequence->assetCollections[frameLabelId];
     
     this->frameSpeed = frameSpeed;
+    
+    // auto grab the width and height of the first asset
+    if(width == -1 && height == -1 && activeAsset->imageFrames.size() > 0) {
+        width = activeAsset->imageFrames[0]->getWidth();
+        height = activeAsset->imageFrames[0]->getWidth();
+    }
 }
 
 
@@ -176,13 +189,17 @@ void ofxMovieClip<ImageType>::stepForward()
 {
     // skipping frames to fast forward
     if(frameSpeed >= defaultFrameSpeed) {
-        if( (playheadCount += frameSpeed) >= activeAsset->imageFramesSize ) playheadCount = 0;
+        if( (playheadCount += frameSpeed) >= activeAsset->imageFramesSize ) {
+            playheadCount = (loopOnFinish) ? 0 : activeAsset->imageFramesSize -1;
+        }
     }
     
     // slower frame speed requires a ticker
     else if( (frameIntervalTicker += frameSpeed ) >= defaultFrameSpeed) {
         frameIntervalTicker = 0;
-        if( (playheadCount += defaultFrameSpeed) >= activeAsset->imageFramesSize ) playheadCount = 0;
+        if( (playheadCount += defaultFrameSpeed) >= activeAsset->imageFramesSize ) {
+            playheadCount = (loopOnFinish) ? 0 : activeAsset->imageFramesSize -1;
+        }
     }
 }
 
@@ -192,13 +209,17 @@ void ofxMovieClip<ImageType>::stepReverse()
     
     // skipping frames to fast forward
     if(frameSpeed >= defaultFrameSpeed) {
-        if( (playheadCount -= frameSpeed) < 0) playheadCount = activeAsset->imageFramesSize - 1;
+        if( (playheadCount -= frameSpeed) < 0) {
+            playheadCount = (loopOnFinish) ? activeAsset->imageFramesSize -1 : 0;
+        }
     }
     
     // slower frame speed requires a ticker
     else if( (frameIntervalTicker += frameSpeed ) >= defaultFrameSpeed) {
         frameIntervalTicker = 0;
-        if( (playheadCount -= defaultFrameSpeed) < 0 ) playheadCount = activeAsset->imageFramesSize - 1;
+        if( (playheadCount -= defaultFrameSpeed) < 0 ) {
+            playheadCount = (loopOnFinish) ? activeAsset->imageFramesSize -1 : 0;
+        }
     }
 }
 

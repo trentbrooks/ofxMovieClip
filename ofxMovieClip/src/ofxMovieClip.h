@@ -44,13 +44,17 @@ class ofxMovieClip {
 		void gotoAndPlay(string frameLabel, int frameNumber);
 		void gotoAndStop(string frameLabel, int frameNumber);
     
+        // looping options
         bool isLastFrame() { return (playheadCount == activeAsset->imageFramesSize-1); };
+        bool setLooping(bool bLoop) { loopOnFinish = bLoop; };
 
         // display position
         void setPosition(float x, float y);
         ofPoint* getPositionPtr() { return &position; };
         ofPoint getPosition() { return position; };
         void setSize(float w, float h);
+        float getWidth() { return width; };
+        float getHeight() { return height; };
 
 		// drawing
 		void draw();
@@ -103,7 +107,9 @@ class ofxMovieClip {
         PlaybackMode playMode; // 0 = stopped, 1 = playing, 2 = reverse
         float playheadCount;
         float reversePlayheadCount;
-        int frameLabelId; // corresponds with a frameLabel   
+        int frameLabelId; // corresponds with a frameLabel
+    
+        bool loopOnFinish;
 };
 
 // use these types = ofTexture, ofFbo, ofPixels
