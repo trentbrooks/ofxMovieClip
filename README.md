@@ -3,7 +3,7 @@ ofxMovieClip & ofxImageSequenceLoader are a set of helper classes for loading an
 Now templated with ofxTextureMovieClip/ofxTextureImageSequence for ofTexture's, ofxFboMovieClip/ofxFboImageSequence for ofFbo's, and ofxPixelsMovieClip/ofxPixelsImageSequence for ofPixels. ofPixels are good for very large image sequences, stored on disk instead of graphics card.
 
 ## Credit ##
-ofxImageSequenceLoader is similar to and inspired by FlightPhase's http://www.flightphase.com ofxImageSequence.
+ofxImageSequenceLoader is just a modified version of FlightPhase's http://www.flightphase.com ofxImageSequence.
 
 ## Sample usage ##
 	// setup image sequencer
@@ -13,15 +13,14 @@ ofxImageSequenceLoader is similar to and inspired by FlightPhase's http://www.fl
 	imageSequence.loadAndCreateSequence("frogs");
 	imageSequence.loadAndCreateSequence("horses");
 
-	// initialise a movie clip, passing a reference to the ofxImageSequenceLoader, and desired frame speed/rate for the image sequence
-	// 2nd parameter (frameSpeed): 1.0f or 60.0f / ofGetFrameRate() plays back at apps frame rate, 0.5f or or 30.0f / ofGetFrameRate() plays back at half speed, 2.0f or 120.0 / ofGetFrameRate() plays back twice as fast as app frame rate
+	// create a movieclip and pass in a reference to the ofxImageSequenceLoader & desired frame delay in seconds
 	ofxTextureMovieClip mc;
-	mc.init(&imageSequence, 30.0f / ofGetFrameRate()); 
+	mc.init(&imageSequence, 1.0/30.0f); 
 
 	// control the movie clip timeline from keyboard events/mouse events etc.
 	mc.gotoAndPlay("horses");
 
 	// in your main draw loop
-	mc.draw(0, 0);
+	mc.draw();
 
 Trent

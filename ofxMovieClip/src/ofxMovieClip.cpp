@@ -4,27 +4,27 @@
 template<typename ImageType>
 ofxMovieClip<ImageType>::ofxMovieClip(){
 	playheadCount = 0;
-	reversePlayheadCount = 0;
 	playMode = STEP_FORWARD;
-    frameIntervalTicker = 0.0f; // cumulative
-    frameSpeed = defaultFrameSpeed = 1.0f;
+    previousFrameTimeElapsed = 0;
+    frameDelayInSeconds = 1.0 / 30.0; // default around 30fps
 	frameLabelId = 0;
-    position = ofPoint(0,0);
     width= height =-1;
     isCustomSize = false;
     playheadCopy = -1;
+    loopCount = 0;
     loopOnFinish = true;
     activeAsset = NULL;
+    pixelsTexture = NULL;
 }
 
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::init(ofxImageSequenceLoader<ImageType>* imageSequence, float frameSpeed)
+void ofxMovieClip<ImageType>::init(ofxImageSequenceLoader<ImageType>* imageSequence, float frameDelay)
 {
 	this->imageSequence = imageSequence;
     activeAsset = imageSequence->assetCollections[frameLabelId];
     
-    this->frameSpeed = frameSpeed;
+    this->frameDelayInSeconds = frameDelay;
     
     // auto grab the width and height of the first asset
     if(width == -1 && height == -1 && activeAsset->imageFrames.size() > 0) {
@@ -36,7 +36,7 @@ void ofxMovieClip<ImageType>::init(ofxImageSequenceLoader<ImageType>* imageSeque
 //--------------------------------------------------------------
 // template specialisation: ofPixels only
 template<>
-void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequence, float frameSpeed)
+void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequence, float frameDelay)
 {
     pixelsTexture = new ofTexture();
     //pixelsTexture->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
@@ -44,7 +44,7 @@ void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequenc
 	this->imageSequence = imageSequence;
     activeAsset = imageSequence->assetCollections[frameLabelId];
     
-    this->frameSpeed = frameSpeed;
+    this->frameDelayInSeconds = frameDelay;
     
     // auto grab the width and height of the first asset
     if(width == -1 && height == -1 && activeAsset->imageFrames.size() > 0) {
@@ -185,41 +185,44 @@ void ofxMovieClip<ImageType>::tick()
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::stepForward()
-{
-    // skipping frames to fast forward
-    if(frameSpeed >= defaultFrameSpeed) {
-        if( (playheadCount += frameSpeed) >= activeAsset->imageFramesSize ) {
-            playheadCount = (loopOnFinish) ? 0 : activeAsset->imageFramesSize -1;
+void ofxMovieClip<ImageType>::stepForward() {
+    float elapsedFrameTimeDiff = ofGetElapsedTimef()-previousFrameTimeElapsed;
+    if(elapsedFrameTimeDiff >= frameDelayInSeconds) {
+        
+        playheadCount++;
+        if(playheadCount >= activeAsset->imageFramesSize ) {
+            if(loopOnFinish) {
+                playheadCount = 0; // default behaviour
+            } else if(loopCount > 1) {
+                loopCount--;
+                playheadCount = 0;
+            } else {
+                playheadCount = activeAsset->imageFramesSize -1;
+            }
         }
+        previousFrameTimeElapsed = ofGetElapsedTimef();
     }
     
-    // slower frame speed requires a ticker
-    else if( (frameIntervalTicker += frameSpeed ) >= defaultFrameSpeed) {
-        frameIntervalTicker = 0;
-        if( (playheadCount += defaultFrameSpeed) >= activeAsset->imageFramesSize ) {
-            playheadCount = (loopOnFinish) ? 0 : activeAsset->imageFramesSize -1;
-        }
-    }
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::stepReverse()
-{
+void ofxMovieClip<ImageType>::stepReverse() {
     
-    // skipping frames to fast forward
-    if(frameSpeed >= defaultFrameSpeed) {
-        if( (playheadCount -= frameSpeed) < 0) {
-            playheadCount = (loopOnFinish) ? activeAsset->imageFramesSize -1 : 0;
+    float elapsedFrameTimeDiff = ofGetElapsedTimef()-previousFrameTimeElapsed;
+    if(elapsedFrameTimeDiff >= frameDelayInSeconds) {
+        
+        playheadCount--;
+        if(playheadCount < 0) {
+            if(loopOnFinish) {
+                playheadCount = activeAsset->imageFramesSize -1; // default behaviour
+            } else if(loopCount > 1) {
+                loopCount--;
+                playheadCount = 0;
+            } else {
+                playheadCount = 0;
+            }
         }
-    }
-    
-    // slower frame speed requires a ticker
-    else if( (frameIntervalTicker += frameSpeed ) >= defaultFrameSpeed) {
-        frameIntervalTicker = 0;
-        if( (playheadCount -= defaultFrameSpeed) < 0 ) {
-            playheadCount = (loopOnFinish) ? activeAsset->imageFramesSize -1 : 0;
-        }
+        previousFrameTimeElapsed = ofGetElapsedTimef();
     }
 }
 
@@ -259,12 +262,12 @@ template<>
 ofTexture* ofxMovieClip<ofPixels>::getTexturePtr() {
     
     // only allocate + load if the playhead has changed, otherwise return cached copy
-    if(playheadCopy != int(playheadCount)) {
+    if(playheadCopy != playheadCount) {
         //pixelsTexture->clear();
         ofPixels* px = activeAsset->imageFrames[playheadCount];
         if(!pixelsTexture->isAllocated()) pixelsTexture->allocate(*px); //->getWidth(), px->getHeight(), GL_RGB);        
         pixelsTexture->loadData(*px);
-        playheadCopy = int(playheadCount);
+        playheadCopy = playheadCount;
     }
     
     

@@ -10,9 +10,8 @@ void testApp::setup(){
     imageSequence.loadAndCreateSequence("frogs");
     imageSequence.loadAndCreateSequence("horses");
     
-    // create as many movieclips as you want and pass in a reference to the ofxImageSequenceLoader & desired frame rate/speed
-    // 2nd parameter (frameSpeed): 1.0f or 60.0f / ofGetFrameRate() plays back at apps frame rate, 0.5f or or 30.0f / ofGetFrameRate() plays back at half speed, 2.0f or 120.0 / ofGetFrameRate() plays back twice as fast as app frame rate
-    mc.init(&imageSequence, 20.0f / ofGetFrameRate()); // eg. 20fps
+    // create a movieclip and pass in a reference to the ofxImageSequenceLoader & desired frame delay
+    mc.init(&imageSequence, 1.0/30.0f); // eg. around 30fps
 	mc.gotoAndPlay("frogs");
     
 }
@@ -36,7 +35,7 @@ void testApp::draw(){
     ofDrawBitmapString("Press 4 to stop",20,80);
     ofDrawBitmapString("Press 5 to resume",20,100);
     ofDrawBitmapString("Playhead: " + ofToString(mc.getPlayhead()),20,120);
-    ofDrawBitmapString("Click/drag to adjust playback speed: " + ofToString(mc.getFrameSpeed()),20,140);
+    ofDrawBitmapString("Click/drag to adjust frame delay: " + ofToString(mc.getFrameDelay()),20,140);
 }
 
 //--------------------------------------------------------------
@@ -73,9 +72,8 @@ void testApp::mouseMoved(int x, int y ){
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
     
-    // map mouse x position to playback speed between slow (0) and twice as fast (2.0)
-    float newFrameSpeed = ofMap(x, 0, ofGetWidth(), 0, 2.0);
-    mc.setFrameSpeed(newFrameSpeed);
+    float newFrameDelay = ofMap(x, 0, ofGetWidth(), 0, 0.05);
+    mc.setFrameDelay(newFrameDelay);
 }
 
 //--------------------------------------------------------------

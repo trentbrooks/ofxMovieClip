@@ -25,7 +25,7 @@ class ofxMovieClip {
 		ofxMovieClip();
 
 		// initialisation
-		void init(ofxImageSequenceLoader<ImageType>* texIs, float frameSpeed);
+		void init(ofxImageSequenceLoader<ImageType>* texIs, float frameDelay);
         
 
 		// main ingrediant
@@ -43,10 +43,6 @@ class ofxMovieClip {
 		void gotoAndStop(string frameLabel);
 		void gotoAndPlay(string frameLabel, int frameNumber);
 		void gotoAndStop(string frameLabel, int frameNumber);
-    
-        // looping options
-        bool isLastFrame() { return (playheadCount == activeAsset->imageFramesSize-1); };
-        bool setLooping(bool bLoop) { loopOnFinish = bLoop; };
 
         // display position
         void setPosition(float x, float y);
@@ -60,24 +56,26 @@ class ofxMovieClip {
 		void draw();
         void draw(float x, float y);
 		void draw(float x, float y, float w, float h);
-        // deprecated draw methods converted to inline- keeping here for legacy projects
-        void drawFrame() { draw(); };
-        void drawFrame(float x, float y) { draw(x,y); };
-		void drawFrame(float x, float y, float w, float h) { draw(x,y,w,h); };
-        
+
+        // texture
         ofTexture* getTexturePtr();
-        ofTexture* getFramePtr() { return getTexturePtr(); }; // deprecated
-        
-        // useful playback setters/getters
-        float* getFrameSpeedPtr() { return &frameSpeed; };
-        float getFrameSpeed() { return frameSpeed; };
-        void setFrameSpeed(float speed) { frameSpeed = speed; };
+    
+        // looping options
+        bool isLastFrame() { return (playheadCount == activeAsset->imageFramesSize-1); };
+        bool setLooping(bool bLoop) { loopOnFinish = bLoop; };
+        void setLoopCount(int bLoopCount) { loopCount = bLoopCount; };
+    
+        // playback setters/getters
+        float* getFrameDelayPtr() { return &frameDelayInSeconds; };
+        float getFrameDelay() { return frameDelayInSeconds; };
+        void setFrameDelay(float frameDelay) { frameDelayInSeconds = frameDelay; };
+    
+        int* getPlayheadPtr() { return &playheadCount; };
+        int getPlayhead() { return playheadCount; };
+        void setPlayhead(float frameNum) { playheadCount = frameNum ; };
+
         PlaybackMode getPlaybackMode() { return playMode; };
-        float* getPlayheadPtr() { return (playMode == STEP_FORWARD) ? &playheadCount : &reversePlayheadCount; };
-        float getPlayhead() { return (playMode == STEP_FORWARD) ? playheadCount : reversePlayheadCount; };
-        void setPlayhead(float frameNum) { (playMode == STEP_FORWARD) ? playheadCount = frameNum : reversePlayheadCount = frameNum; };
-
-
+    
     
 	protected:
 
@@ -85,31 +83,27 @@ class ofxMovieClip {
 		void tick();
 		void stepReverse();
 		void stepForward();
-
-		// draw with texture returns
-		//ofTexture*& getFrameAtPercent(float percent);
-        
+    
         // display position
         ofPoint position;
         float width, height;
         bool isCustomSize;
-
-		// playback speed
-        float frameIntervalTicker;
-        float defaultFrameSpeed;
-        
+    
         // only required by ofxPixelMovieClip
 		ofTexture* pixelsTexture;
         int playheadCopy;
 		
         // playback
-        float frameSpeed; // 1.0f = 60.0f/ofGetFrameRate() (same as apps frame rate), 0.5f = 30.0f/ofGetFrameRate() (half the apps frame rate), 2.0f = 120.0f/ofGetFrameRate() (double playback speed)
+        float frameDelayInSeconds;
+        float previousFrameTimeElapsed;
+    
         PlaybackMode playMode; // 0 = stopped, 1 = playing, 2 = reverse
-        float playheadCount;
-        float reversePlayheadCount;
+        int playheadCount;
         int frameLabelId; // corresponds with a frameLabel
     
+        // looping
         bool loopOnFinish;
+        int loopCount;
 };
 
 // use these types = ofTexture, ofFbo, ofPixels
