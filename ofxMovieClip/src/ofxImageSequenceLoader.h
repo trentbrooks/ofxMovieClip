@@ -5,21 +5,21 @@
 
 /*
  ofxImageSequenceLoader
- - loads image sequences as ofFbo's, ofTexture's or ofPixels
- - declare as ofxTextureImageSequenceLoader, ofxFboImageSequenceLoader, or ofxPixelImageSequenceLoader (typedefs at bottom)
+ - loads image sequences as ofTexture's or ofPixels
+ - declare as ofxTextureImageSequenceLoader, or ofxPixelImageSequenceLoader (typedefs at bottom)
  */
 
 template <typename T>
 struct MovieClipAssetsAndLabel {
     
     //template <typename T>
-    vector<T*> imageFrames; // ofTexture*, ofFbo*, ofPixels*
+    vector<T*> imageFrames; // ofTexture*, ofPixels*
     int imageFramesSize;
     string frameLabel;
 };
 
 
-template <typename ImageType> // ofTexture, or ofFbo, or ofPixels
+template <typename ImageType> // ofTexture, or ofPixels
 class ofxImageSequenceLoader {
     
     public:
@@ -38,7 +38,6 @@ class ofxImageSequenceLoader {
 
 
 
-// types = ofTexture, ofFbo, ofPixels
+// types = ofTexture, ofPixels
 typedef ofxImageSequenceLoader<ofTexture> ofxTextureImageSequenceLoader;
-typedef ofxImageSequenceLoader<ofFbo> ofxFboImageSequenceLoader;
 typedef ofxImageSequenceLoader<ofPixels> ofxPixelsImageSequenceLoader;

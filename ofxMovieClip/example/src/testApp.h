@@ -25,10 +25,6 @@ class testApp : public ofBaseApp{
         ofxTextureImageSequenceLoader imageSequence;
         ofxTextureMovieClip mc;
         
-        // movieclip from fbos
-        //ofxFboImageSequenceLoader imageSequence;
-        //ofxFboMovieClip mc;
-        
         // movieclip from pixels (good for large quantities of images - CPU instead of GPU)
         //ofxPixelsImageSequenceLoader imageSequence;
         //ofxPixelsMovieClip mc;

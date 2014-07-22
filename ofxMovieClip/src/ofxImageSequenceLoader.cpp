@@ -71,66 +71,6 @@ void ofxImageSequenceLoader<ofTexture>::loadAndCreateSequence(string folderPath,
     assetCollectionSize = assetCollections.size();
 }
 
-// template specialisation: ofFbo
-template<>
-void ofxImageSequenceLoader<ofFbo>::loadAndCreateSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight)
-{
-    ofDirectory dir;
-    int numFiles = dir.listDir(folderPath);
-    dir.sort();
-    
-    MovieClipAssetsAndLabel<ofFbo>* assetsAndLabel = new MovieClipAssetsAndLabel<ofFbo>();
-    
-    ofImage	loader;
-    
-    // semi-transparent images don't seem to draw properly when ofEnableAlphaBlending is on?
-    // so I will disable if it's on and then re-enable after fbos created.
-    int isBlendingOn = ofGetStyle().blendingMode;
-    if(isBlendingOn == 1) ofDisableAlphaBlending();
-    
-	for(int i=0; i < numFiles; i++){
-        
-        string fileExtension = ofToUpper(dir.getFile(i).getExtension());
-        if(fileExtension == "JPG" || fileExtension == "PNG") {
-            
-            // load and allocate memory for images
-            loader.loadImage(dir.getPath(i));
-            if(resizeWidth > 0) loader.resize(resizeWidth, resizeHeight);
-            cout << "FBO: " << dir.getPath(i) << endl;
-            
-            // setup new fbo
-            ofFbo* fbo = new ofFbo();
-            fbo->allocate(loader.getWidth(), loader.getHeight());
-            
-            // draw to fbo once
-            fbo->begin();
-            ofClear(0,0,0,0);
-            //ofSetColor(255);
-            loader.draw(0, 0);
-            fbo->end();
-            
-            // clear image data from memory?
-            loader.clear();
-            
-            // push fbos to vector array
-            //newAssets.push_back(fbo);
-            assetsAndLabel->imageFrames.push_back(fbo);
-            assetsAndLabel->imageFramesSize = assetsAndLabel->imageFrames.size();
-        }
-	}
-    
-    // reset alpha blending
-    if(isBlendingOn == 1) ofEnableAlphaBlending();
-    
-	// push frame labes to vector array
-    string newFrameLabel = (frameLabel == "") ? folderPath : frameLabel;
-	//assetFrameLabels.push_back(newFrameLabel);
-    assetsAndLabel->frameLabel = newFrameLabel;
-    
-    // push assets to collections
-    assetCollections.push_back(assetsAndLabel);
-    assetCollectionSize = assetCollections.size();
-}
 
 // template specialisation: ofPixels
 template<>
@@ -211,5 +151,4 @@ int ofxImageSequenceLoader<ImageType>::getAssetsId(string frameLabel)
 
 
 template class ofxImageSequenceLoader<ofTexture>;
-template class ofxImageSequenceLoader<ofFbo>;
 template class ofxImageSequenceLoader<ofPixels>;

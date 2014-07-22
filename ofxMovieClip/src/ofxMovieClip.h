@@ -12,10 +12,10 @@
 /*
  ofxMovieClip
  - control image sequences with gotoAndPlay like controls.
- - declare as ofxFboMovieClip, ofxTextureMovieClip, or ofxPixelMovieClip (typedefs at bottom)
+ - declare as ofxTextureMovieClip, or ofxPixelMovieClip (typedefs at bottom)
  */
 
-template<typename ImageType> // ofTexture, or ofFbo, or ofPixels
+template<typename ImageType> // ofTexture, or ofPixels
 class ofxMovieClip {
 	public:
         
@@ -106,10 +106,9 @@ class ofxMovieClip {
         int loopCount;
 };
 
-// use these types = ofTexture, ofFbo, ofPixels
+// use these types = ofTexture, ofPixels
 // instead of ofxMovieClip
 typedef ofxMovieClip<ofTexture> ofxTextureMovieClip;
-typedef ofxMovieClip<ofFbo> ofxFboMovieClip;
 typedef ofxMovieClip<ofPixels> ofxPixelsMovieClip;
 
 

@@ -18,8 +18,10 @@ ofxMovieClip<ImageType>::ofxMovieClip(){
 }
 
 
-template<typename ImageType>
-void ofxMovieClip<ImageType>::init(ofxImageSequenceLoader<ImageType>* imageSequence, float frameDelay)
+//--------------------------------------------------------------
+// template specialisation: ofTexture
+template<>
+void ofxMovieClip<ofTexture>::init(ofxImageSequenceLoader<ofTexture>* imageSequence, float frameDelay)
 {
 	this->imageSequence = imageSequence;
     activeAsset = imageSequence->assetCollections[frameLabelId];
@@ -33,12 +35,12 @@ void ofxMovieClip<ImageType>::init(ofxImageSequenceLoader<ImageType>* imageSeque
     }
 }
 
-//--------------------------------------------------------------
-// template specialisation: ofPixels only
+
+// template specialisation: ofPixels
 template<>
 void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequence, float frameDelay)
 {
-    pixelsTexture = new ofTexture();
+    pixelsTexture = new ofTexture(); // create a texture container for the ofPixels movieclip
     //pixelsTexture->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
 	this->imageSequence = imageSequence;
@@ -251,12 +253,6 @@ ofTexture* ofxMovieClip<ofTexture>::getTexturePtr() {
     return activeAsset->imageFrames[playheadCount];
 }
 
-// template specialisation: ofFbo
-template<>
-ofTexture* ofxMovieClip<ofFbo>::getTexturePtr() {
-    return &activeAsset->imageFrames[playheadCount]->getTextureReference();
-}
-
 // template specialisation: ofPixels
 template<>
 ofTexture* ofxMovieClip<ofPixels>::getTexturePtr() {
@@ -276,5 +272,4 @@ ofTexture* ofxMovieClip<ofPixels>::getTexturePtr() {
 
 
 template class ofxMovieClip<ofTexture>;
-template class ofxMovieClip<ofFbo>;
 template class ofxMovieClip<ofPixels>;
