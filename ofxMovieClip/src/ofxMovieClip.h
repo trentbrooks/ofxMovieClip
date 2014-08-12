@@ -57,7 +57,7 @@ class ofxMovieClip {
     
         // looping options
         bool isLastFrame() { return (playheadCount == activeAsset->imageFramesSize-1); };
-        bool setLooping(bool bLoop) { loopOnFinish = bLoop; };
+        void setLooping(bool bLoop) { loopOnFinish = bLoop; };
         void setLoopCount(int bLoopCount) { loopCount = bLoopCount; };
     
         // playback setters/getters
