@@ -2,23 +2,19 @@
 
 //--------------------------------------------------------------
 template <typename ImageType>
-ofxImageSequenceLoader<ImageType>::ofxImageSequenceLoader(){
+ofxImageSequenceLoader<ImageType>::ofxImageSequenceLoader() {
     assetCollectionSize = 0;
 }
 
 template <typename ImageType>
-ofxImageSequenceLoader<ImageType>::~ofxImageSequenceLoader()
-{
+ofxImageSequenceLoader<ImageType>::~ofxImageSequenceLoader() {
     
-    for (int i = 0; i < assetCollections.size(); i++)
-    {
-        for (int j = 0; j < assetCollections[i]->imageFrames.size(); j++)
-		{
+    for (int i = 0; i < assetCollections.size(); i++) {
+        for (int j = 0; j < assetCollections[i]->imageFrames.size(); j++) {
             delete assetCollections[i]->imageFrames[j];
         }
         
         assetCollections[i]->imageFrames.clear();
-        
     }
     
     assetCollections.clear();
@@ -27,15 +23,13 @@ ofxImageSequenceLoader<ImageType>::~ofxImageSequenceLoader()
 //--------------------------------------------------------------
 // template specialisation: ofTexture
 template<>
-void ofxImageSequenceLoader<ofTexture>::loadAndCreateSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight)
-{
+void ofxImageSequenceLoader<ofTexture>::loadSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight) {
+    
     ofDirectory dir;
     int numFiles = dir.listDir(folderPath);
     dir.sort();
     
-    MovieClipAssetsAndLabel<ofTexture>* assetsAndLabel = new MovieClipAssetsAndLabel<ofTexture>();
-        
-    ofImage	loader;
+    MovieClipData<ofTexture>* assetsAndLabel = new MovieClipData<ofTexture>();
     
 	for(int i=0; i < numFiles; i++){
         
@@ -43,28 +37,33 @@ void ofxImageSequenceLoader<ofTexture>::loadAndCreateSequence(string folderPath,
         if(fileExtension == "JPG" || fileExtension == "PNG") {
             
             // load and allocate memory for images
-            loader.loadImage(dir.getPath(i));
-            if(resizeWidth > 0) loader.resize(resizeWidth, resizeHeight);
-            cout << "Texture: " << dir.getPath(i) << endl;
+            ofPixels pixsLoader;
+            bool loaded = ofLoadImage(pixsLoader, dir.getPath(i));
+            if(!loaded) {
+                ofLogError() << "* Failed to load image: " << dir.getPath(i);
+                continue;
+            }
+            
+            if(resizeWidth > 0) pixsLoader.resize(resizeWidth, resizeHeight);
+            ofLogVerbose() << "Texture: " << dir.getPath(i);
             
             // setup texture
-            ofTexture* texture = makeTextureFromImage(&loader);
+            ofTexture* texture = new ofTexture();// makeTextureFromImage(&loader);
+            texture->loadData(pixsLoader);
             
             // push texture to vector array
-            //newAssets.push_back(texture);
             assetsAndLabel->imageFrames.push_back(texture);
-            assetsAndLabel->imageFramesSize = assetsAndLabel->imageFrames.size();
-            
-            // clear image data from memory?
-            loader.clear();
         }
-        
     }
     
-	// push frame labes to vector array
-    string newFrameLabel = (frameLabel == "") ? folderPath : frameLabel;
-	//assetFrameLabels.push_back(newFrameLabel);
-    assetsAndLabel->frameLabel = newFrameLabel;
+	// save meta data
+    assetsAndLabel->frameLabel = (frameLabel == "") ? folderPath : frameLabel;
+    assetsAndLabel->folderPath = folderPath;
+    assetsAndLabel->dir = dir;
+    assetsAndLabel->resizeHeight = resizeHeight;
+    assetsAndLabel->resizeWidth = resizeWidth;
+    assetsAndLabel->imageFramesSize = assetsAndLabel->imageFrames.size();
+    assetsAndLabel->complete = true;
     
     // push assets to collections
     assetCollections.push_back(assetsAndLabel);
@@ -74,13 +73,13 @@ void ofxImageSequenceLoader<ofTexture>::loadAndCreateSequence(string folderPath,
 
 // template specialisation: ofPixels
 template<>
-void ofxImageSequenceLoader<ofPixels>::loadAndCreateSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight)
-{
+void ofxImageSequenceLoader<ofPixels>::loadSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight) {
+    
     ofDirectory dir;
     int numFiles = dir.listDir(folderPath);
     dir.sort();
     
-    MovieClipAssetsAndLabel<ofPixels>* assetsAndLabel = new MovieClipAssetsAndLabel<ofPixels>();
+    MovieClipData<ofPixels>* assetsAndLabel = new MovieClipData<ofPixels>();
         
 	for(int i=0; i < numFiles; i++){
         
@@ -89,65 +88,49 @@ void ofxImageSequenceLoader<ofPixels>::loadAndCreateSequence(string folderPath, 
             
             // load and allocate memory for images            
             ofPixels* pixs = new ofPixels();
-            ofLoadImage(*pixs, dir.getPath(i));
+            bool loaded = ofLoadImage(*pixs, dir.getPath(i));
+            
+            if(!loaded) {
+                ofLogError() << "* Failed to load image: " << dir.getPath(i);
+                continue;
+            }
+            
             if(resizeWidth > 0) pixs->resize(resizeWidth, resizeHeight);
-            cout << "PIXELS: " << dir.getPath(i) << endl;
+            ofLogVerbose() << "Pixels: " << dir.getPath(i);
             
             // push fbos to vector array
-            //newAssets.push_back(fbo);
             assetsAndLabel->imageFrames.push_back(pixs);
-            assetsAndLabel->imageFramesSize = assetsAndLabel->imageFrames.size();
         }
 	}
     
-	// push frame labes to vector array
-    string newFrameLabel = (frameLabel == "") ? folderPath : frameLabel;
-	//assetFrameLabels.push_back(newFrameLabel);
-    assetsAndLabel->frameLabel = newFrameLabel;
+	// save meta data
+    assetsAndLabel->frameLabel = (frameLabel == "") ? folderPath : frameLabel;
+    assetsAndLabel->folderPath = folderPath;
+    assetsAndLabel->dir = dir;
+    assetsAndLabel->resizeHeight = resizeHeight;
+    assetsAndLabel->resizeWidth = resizeWidth;
+    assetsAndLabel->imageFramesSize = assetsAndLabel->imageFrames.size();
+    assetsAndLabel->complete = true;
     
     // push assets to collections
     assetCollections.push_back(assetsAndLabel);
     assetCollectionSize = assetCollections.size();
 }
 
-template<typename ImageType>
-ofTexture* ofxImageSequenceLoader<ImageType>::makeTextureFromImage(ofImage *img, bool useARB){
-    
-	ofTexture* t = new ofTexture();
-    if(img->type == OF_IMAGE_COLOR_ALPHA){
-        // alpha image
-        t->allocate(img->width, img->height, GL_RGBA, useARB);
-        t->loadData(img->getPixels(),img->width, img->height, GL_RGBA);
-	}else if(img->type == OF_IMAGE_COLOR){
-        // rgb image
-		t->allocate(img->width, img->height, GL_RGB, useARB);
-        t->loadData(img->getPixels(),img->width, img->height, GL_RGB);
-	} else {
-        // greyscale image
-        t->allocate(img->width, img->height, GL_LUMINANCE, false);
-        t->loadData(img->getPixels(),img->width, img->height, GL_LUMINANCE);
-    }
-    
-	return t;
-    
-}
-
 
 //--------------------------------------------------------------
 template<typename ImageType>
-int ofxImageSequenceLoader<ImageType>::getAssetsId(string frameLabel)
-{
-	for(int i=0; i < assetCollectionSize; i++)
-	{
-		if(assetCollections[i]->frameLabel == frameLabel)
-		{
+int ofxImageSequenceLoader<ImageType>::getAssetsId(string frameLabel) {
+    
+	for(int i=0; i < assetCollectionSize; i++) {
+		if(assetCollections[i]->frameLabel == frameLabel) {
 			return i;
 		}
 	}
 
-
-	return 0;
+	return -1;
 }
+
 
 
 template class ofxImageSequenceLoader<ofTexture>;

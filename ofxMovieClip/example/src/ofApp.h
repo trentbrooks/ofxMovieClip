@@ -1,9 +1,8 @@
 #pragma once
-
 #include "ofMain.h"
 #include "ofxMovieClip.h"
 
-class testApp : public ofBaseApp{
+class ofApp : public ofBaseApp{
 
 	public:
 		void setup();
@@ -29,4 +28,7 @@ class testApp : public ofBaseApp{
         //ofxPixelsImageSequenceLoader imageSequence;
         //ofxPixelsMovieClip mc;
 		
+        // threaded pixels loader (requires call to startThread() after loadSequence())
+        //ofxPixelsSequenceLoaderThread imageSequence;
+        //ofxPixelsMovieClip mc;
 };

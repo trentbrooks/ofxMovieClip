@@ -139,7 +139,7 @@ void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel, int frameNumber)
 //--------------------------------------------------------------
 // Drawing
 template<typename ImageType>
-void ofxMovieClip<ImageType>::draw(){
+void ofxMovieClip<ImageType>::draw() { 
     
     if(isCustomSize)
         getTexturePtr()->draw(position.x, position.y, width, height);
@@ -149,7 +149,7 @@ void ofxMovieClip<ImageType>::draw(){
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::draw(float x, float y){
+void ofxMovieClip<ImageType>::draw(float x, float y) {
     
     if(isCustomSize)
         getTexturePtr()->draw(x, y, width, height);
@@ -159,7 +159,8 @@ void ofxMovieClip<ImageType>::draw(float x, float y){
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::draw(float x, float y, float w, float h){
+void ofxMovieClip<ImageType>::draw(float x, float y, float w, float h) {
+    
 	getTexturePtr()->draw(x, y, w, h);
 	tick(); // now gets called whenever a drawFrame is requested instead of manually
 }
@@ -259,16 +260,22 @@ ofTexture* ofxMovieClip<ofPixels>::getTexturePtr() {
     
     // only allocate + load if the playhead has changed, otherwise return cached copy
     if(playheadCopy != playheadCount) {
-        //pixelsTexture->clear();
+
         ofPixels* px = activeAsset->imageFrames[playheadCount];
-        if(!pixelsTexture->isAllocated()) pixelsTexture->allocate(*px); //->getWidth(), px->getHeight(), GL_RGB);        
-        pixelsTexture->loadData(*px);
         playheadCopy = playheadCount;
+        if(!px->isAllocated()) {
+            
+            // thread has not finished loading image yet - will not draw
+            // should probably also hold the playhead until this has occured? atm, the playhead can be too fast for the loader
+            return pixelsTexture;
+        }
+        if(!pixelsTexture->isAllocated()) pixelsTexture->allocate(*px);
+        pixelsTexture->loadData(*px);
     }
-    
     
     return pixelsTexture;
 }
+
 
 
 template class ofxMovieClip<ofTexture>;

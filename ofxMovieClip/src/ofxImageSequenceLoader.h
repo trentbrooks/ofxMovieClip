@@ -10,12 +10,17 @@
  */
 
 template <typename T>
-struct MovieClipAssetsAndLabel {
+struct MovieClipData {
     
-    //template <typename T>
     vector<T*> imageFrames; // ofTexture*, ofPixels*
     int imageFramesSize;
     string frameLabel;
+    
+    // extra info (only used by threaded loader)
+    bool complete;
+    int resizeWidth, resizeHeight;
+    string folderPath;
+    ofDirectory dir;
 };
 
 
@@ -26,14 +31,18 @@ class ofxImageSequenceLoader {
         ofxImageSequenceLoader();
         ~ofxImageSequenceLoader();
     
-        // loads image sequence  by folder
-        void loadAndCreateSequence(string folderPath, string frameLabel = "", int resizeWidth = 0, int resizeHeight = 0);
-
-        ofTexture* makeTextureFromImage(ofImage *img, bool useARB = true);
+        // loads image sequence by folder
+        void loadSequence(string folderPath, string frameLabel = "", int resizeWidth = 0, int resizeHeight = 0);
     
-        vector<MovieClipAssetsAndLabel<ImageType>*> assetCollections;
+        // deprecated- name to long
+        void loadAndCreateSequence(string folderPath, string frameLabel = "", int resizeWidth = 0, int resizeHeight = 0) {
+            loadSequence(folderPath, frameLabel, resizeWidth, resizeHeight);
+        }
+    
+        vector<MovieClipData<ImageType>*> assetCollections;
         int assetCollectionSize;        
-        int getAssetsId(string frameLabel);	        
+        int getAssetsId(string frameLabel);
+    
 };
 
 

@@ -1,13 +1,9 @@
-
 #pragma once
 
 
-#include "ofxImageSequenceLoader.h"
 #include "ofMain.h"
-
-//#define STEP_STOP 0
-//#define STEP_FORWARD 1
-//#define STEP_REVERSE 2
+#include "ofxPixelsSequenceLoaderThread.h"
+#include "ofxImageSequenceLoader.h"
 
 /*
  ofxMovieClip
@@ -21,7 +17,6 @@ class ofxMovieClip {
         
         enum PlaybackMode { STEP_STOP, STEP_FORWARD, STEP_REVERSE };
     
-    
 		ofxMovieClip();
 
 		// initialisation
@@ -30,7 +25,7 @@ class ofxMovieClip {
 
 		// main ingrediant
 		ofxImageSequenceLoader<ImageType>* imageSequence;
-        MovieClipAssetsAndLabel<ImageType>* activeAsset;
+        MovieClipData<ImageType>* activeAsset;
 
 		// timeline controls
 		void play();

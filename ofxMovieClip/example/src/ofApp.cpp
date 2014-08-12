@@ -1,14 +1,19 @@
-#include "testApp.h"
+#include "ofApp.h"
 
 //--------------------------------------------------------------
-void testApp::setup(){
+void ofApp::setup(){
     
     ofSetFrameRate(60);
     ofEnableAlphaBlending();
     
+    ofSetLogLevel(OF_LOG_VERBOSE);
+    
     // load a folder of images as image sequence -optional 2nd paramter is frame label, if empty it defaults to folder name. eg "frogs"
-    imageSequence.loadAndCreateSequence("frogs");
-    imageSequence.loadAndCreateSequence("horses");
+    imageSequence.loadSequence("frogs");
+    imageSequence.loadSequence("horses");
+    
+    // required for threaded loader
+    //imageSequence.startThread();
     
     // create a movieclip and pass in a reference to the ofxImageSequenceLoader & desired frame delay
     mc.init(&imageSequence, 1.0/30.0f); // eg. around 30fps
@@ -17,12 +22,13 @@ void testApp::setup(){
 }
 
 //--------------------------------------------------------------
-void testApp::update(){
+void ofApp::update(){
     
+    ofSetWindowTitle(ofToString(ofGetFrameRate()));
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void ofApp::draw(){
     
     ofBackground(255,255,0);
     ofSetColor(255);
@@ -39,7 +45,7 @@ void testApp::draw(){
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
+void ofApp::keyPressed(int key){
     switch(key){
         case '1':
             mc.gotoAndPlay("frogs");
@@ -60,43 +66,43 @@ void testApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void ofApp::keyReleased(int key){
     
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y ){
     
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button){
     
     float newFrameDelay = ofMap(x, 0, ofGetWidth(), 0, 0.05);
     mc.setFrameDelay(newFrameDelay);
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){
     
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button){
     
 }
 
 //--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h){
     
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg){
     
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
     
 }
