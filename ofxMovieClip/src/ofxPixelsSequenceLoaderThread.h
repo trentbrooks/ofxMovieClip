@@ -20,6 +20,11 @@ class ofxPixelsSequenceLoaderThread : public ofxPixelsImageSequenceLoader, publi
         // loads image sequence  by folder
         void loadSequence(string folderPath, string frameLabel = "", int resizeWidth = 0, int resizeHeight = 0);
     
+        // deprecated- name to long
+        void loadAndCreateSequence(string folderPath, string frameLabel = "", int resizeWidth = 0, int resizeHeight = 0) {
+            loadSequence(folderPath, frameLabel, resizeWidth, resizeHeight);
+        };
+    
         // call begin() after all loadSequence's called to start the threaded load
         void begin();
         void startThread(bool mutexBlocks = true);
