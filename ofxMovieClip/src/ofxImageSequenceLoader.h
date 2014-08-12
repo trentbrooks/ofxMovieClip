@@ -48,5 +48,9 @@ class ofxImageSequenceLoader {
 
 
 // types = ofTexture, ofPixels
+typedef ofxImageSequenceLoader<ofTexture> ofxTextureSequenceLoader;
+typedef ofxImageSequenceLoader<ofPixels> ofxPixelsSequenceLoader;
+
+// deprecated - names too long
 typedef ofxImageSequenceLoader<ofTexture> ofxTextureImageSequenceLoader;
 typedef ofxImageSequenceLoader<ofPixels> ofxPixelsImageSequenceLoader;
