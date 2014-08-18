@@ -109,10 +109,12 @@ void ofxPixelsSequenceLoaderThread::threadedFunction(){
 void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel) {
     
     int assetIndex = getAssetsId(frameLabel);
-    for(int i = 0; i < assetCollections[assetIndex]->imageFramesSize; i++) {
-        assetCollections[assetIndex]->imageFrames[i]->clear();
-    }
-    assetCollections[assetIndex]->complete = false;
+    if(assetIndex >= 0 && assetIndex < assetCollections[assetIndex]->imageFramesSize) {
+        for(int i = 0; i < assetCollections[assetIndex]->imageFramesSize; i++) {
+            assetCollections[assetIndex]->imageFrames[i]->clear();
+        }
+        assetCollections[assetIndex]->complete = false;
+    }    
     allAssetsLoaded = false;
 }
 
