@@ -34,10 +34,8 @@ class ofxMovieClip {
 		void restart();
 		void gotoAndPlay(int frameNumber);
 		void gotoAndStop(int frameNumber);
-		void gotoAndPlay(string frameLabel);
-		void gotoAndStop(string frameLabel);
-		void gotoAndPlay(string frameLabel, int frameNumber);
-		void gotoAndStop(string frameLabel, int frameNumber);
+		void gotoAndPlay(string frameLabel, int frameNumber=0);
+		void gotoAndStop(string frameLabel, int frameNumber=0);
 
         // display position
         void setPosition(float x, float y);
@@ -54,8 +52,10 @@ class ofxMovieClip {
 
         // texture
         ofTexture* getTexturePtr();
+        void clearTexture();
     
         // looping options
+        bool isLoopComplete() { return loopComplete; }
         bool isLastFrame() { return (playheadCount == activeAsset->imageFramesSize-1); };
         void setLooping(bool bLoop) { loopOnFinish = bLoop; };
         void setLoopCount(int bLoopCount) { loopCount = bLoopCount; };
@@ -97,6 +97,7 @@ class ofxMovieClip {
         int frameLabelId; // corresponds with a frameLabel
     
         // looping
+        bool loopComplete;
         bool loopOnFinish;
         int loopCount;
 };

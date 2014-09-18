@@ -14,6 +14,7 @@ ofxPixelsSequenceLoaderThread::~ofxPixelsSequenceLoaderThread() {
 //--------------------------------------------------------------
 void ofxPixelsSequenceLoaderThread::loadSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight) {
     
+    mutex.lock();
     ofDirectory dir;
     int numFiles = dir.listDir(folderPath);
     dir.sort();
@@ -39,6 +40,7 @@ void ofxPixelsSequenceLoaderThread::loadSequence(string folderPath, string frame
     // push assets to collections
     assetCollections.push_back(assetsAndLabel);
     assetCollectionSize = assetCollections.size();
+    mutex.unlock();
 }
 
 void ofxPixelsSequenceLoaderThread::startThread(bool mutexBlocks) {
@@ -108,6 +110,7 @@ void ofxPixelsSequenceLoaderThread::threadedFunction(){
 //--------------------------------------------------------------
 void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel) {
     
+    mutex.lock();
     int assetIndex = getAssetsId(frameLabel);
     if(assetIndex >= 0 && assetIndex < assetCollections[assetIndex]->imageFramesSize) {
         for(int i = 0; i < assetCollections[assetIndex]->imageFramesSize; i++) {
@@ -116,6 +119,7 @@ void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel) {
         assetCollections[assetIndex]->complete = false;
     }    
     allAssetsLoaded = false;
+    mutex.unlock();
 }
 
 

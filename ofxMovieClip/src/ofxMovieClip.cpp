@@ -13,6 +13,7 @@ ofxMovieClip<ImageType>::ofxMovieClip(){
     playheadCopy = -1;
     loopCount = 0;
     loopOnFinish = true;
+    loopComplete = false;
     activeAsset = NULL;
     pixelsTexture = NULL;
 }
@@ -60,78 +61,60 @@ void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequenc
 // Play head controls
 //--------------------------------------------------------------
 template<typename ImageType>
-void ofxMovieClip<ImageType>::play()
-{
+void ofxMovieClip<ImageType>::play() {
+    loopComplete = false;
 	playMode = STEP_FORWARD;
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::reverse()
-{
+void ofxMovieClip<ImageType>::reverse() {
+    loopComplete = false;
 	// need to reswap reversePlayheadCount if playing
 	//reversePlayheadCount = frameInterval - playheadCount;
 	playMode = STEP_REVERSE;
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::stop()
-{
+void ofxMovieClip<ImageType>::stop() {
+    loopComplete = false;
 	playMode = STEP_STOP;
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::restart()
-{
+void ofxMovieClip<ImageType>::restart() {
+    loopComplete = false;
 	playMode = STEP_FORWARD;
 	playheadCount = 0;
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::gotoAndPlay(int frameNumber)
-{
+void ofxMovieClip<ImageType>::gotoAndPlay(int frameNumber) {
+    loopComplete = false;
 	playMode = STEP_FORWARD;
 	playheadCount = ofClamp(frameNumber, 0, activeAsset->imageFramesSize - 1);
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::gotoAndStop(int frameNumber)
-{
+void ofxMovieClip<ImageType>::gotoAndStop(int frameNumber) {
+    loopComplete = false;
 	playMode = STEP_STOP;
 	playheadCount = ofClamp(frameNumber, 0, activeAsset->imageFramesSize - 1);
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel)
-{
-	playMode = STEP_FORWARD;
+void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel, int frameNumber) {
+    loopComplete = false;
 	frameLabelId = imageSequence->getAssetsId(frameLabel);
     activeAsset = imageSequence->assetCollections[frameLabelId];
-	playheadCount = 0;
+    playheadCount = ofClamp(frameNumber, 0, activeAsset->imageFramesSize - 1);
 }
 
 template<typename ImageType>
-void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel)
-{
-	playMode = STEP_STOP;
+void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel, int frameNumber) {
+    loopComplete = false;
 	frameLabelId = imageSequence->getAssetsId(frameLabel);
     activeAsset = imageSequence->assetCollections[frameLabelId];
-	playheadCount = 0;		
-}
-
-template<typename ImageType>
-void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel, int frameNumber)
-{
-	frameLabelId = imageSequence->getAssetsId(frameLabel);
-    activeAsset = imageSequence->assetCollections[frameLabelId];
-	gotoAndPlay(frameNumber);
-}
-
-template<typename ImageType>
-void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel, int frameNumber)
-{
-	frameLabelId = imageSequence->getAssetsId(frameLabel);
-    activeAsset = imageSequence->assetCollections[frameLabelId];
-	gotoAndStop(frameNumber);
+    playheadCount = ofClamp(frameNumber, 0, activeAsset->imageFramesSize - 1);
 }
 
 
@@ -202,6 +185,7 @@ void ofxMovieClip<ImageType>::stepForward() {
             } else {
                 playheadCount = activeAsset->imageFramesSize -1;
             }
+            loopComplete = true;
         }
         previousFrameTimeElapsed = ofGetElapsedTimef();
     }
@@ -224,6 +208,7 @@ void ofxMovieClip<ImageType>::stepReverse() {
             } else {
                 playheadCount = 0;
             }
+            loopComplete = true;
         }
         previousFrameTimeElapsed = ofGetElapsedTimef();
     }
@@ -233,18 +218,23 @@ void ofxMovieClip<ImageType>::stepReverse() {
 // Display position
 //--------------------------------------------------------------
 template<typename ImageType>
-void ofxMovieClip<ImageType>::setPosition(float x, float y)
-{
+void ofxMovieClip<ImageType>::setPosition(float x, float y) {
     position.x = x;
     position.y = y;
 }
 
 template<typename ImageType>
 void ofxMovieClip<ImageType>::setSize(float w, float h) {
-    
     width = w;
     height = h;
     isCustomSize = true;
+}
+
+//--------------------------------------------------------------
+// only clears the internal pixels texture for ofPixels
+template<typename ImageType>
+void ofxMovieClip<ImageType>::clearTexture() {
+    if(pixelsTexture) pixelsTexture->clear();
 }
 
 //--------------------------------------------------------------
