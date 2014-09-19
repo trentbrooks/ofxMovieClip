@@ -102,11 +102,29 @@ void ofxMovieClip<ImageType>::gotoAndStop(int frameNumber) {
 }
 
 template<typename ImageType>
+void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel) {
+    loopComplete = false;
+	playMode = STEP_FORWARD;
+	frameLabelId = imageSequence->getAssetsId(frameLabel);
+    activeAsset = imageSequence->assetCollections[frameLabelId];
+	playheadCount = 0;
+}
+
+template<typename ImageType>
+void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel) {
+    loopComplete = false;
+	playMode = STEP_STOP;
+	frameLabelId = imageSequence->getAssetsId(frameLabel);
+    activeAsset = imageSequence->assetCollections[frameLabelId];
+	playheadCount = 0;		
+}
+
+template<typename ImageType>
 void ofxMovieClip<ImageType>::gotoAndPlay(string frameLabel, int frameNumber) {
     loopComplete = false;
 	frameLabelId = imageSequence->getAssetsId(frameLabel);
     activeAsset = imageSequence->assetCollections[frameLabelId];
-    playheadCount = ofClamp(frameNumber, 0, activeAsset->imageFramesSize - 1);
+	gotoAndPlay(frameNumber);
 }
 
 template<typename ImageType>
@@ -114,7 +132,7 @@ void ofxMovieClip<ImageType>::gotoAndStop(string frameLabel, int frameNumber) {
     loopComplete = false;
 	frameLabelId = imageSequence->getAssetsId(frameLabel);
     activeAsset = imageSequence->assetCollections[frameLabelId];
-    playheadCount = ofClamp(frameNumber, 0, activeAsset->imageFramesSize - 1);
+	gotoAndStop(frameNumber);
 }
 
 
@@ -218,20 +236,22 @@ void ofxMovieClip<ImageType>::stepReverse() {
 // Display position
 //--------------------------------------------------------------
 template<typename ImageType>
-void ofxMovieClip<ImageType>::setPosition(float x, float y) {
+void ofxMovieClip<ImageType>::setPosition(float x, float y)
+{
     position.x = x;
     position.y = y;
 }
 
 template<typename ImageType>
 void ofxMovieClip<ImageType>::setSize(float w, float h) {
+    
     width = w;
     height = h;
     isCustomSize = true;
 }
 
 //--------------------------------------------------------------
-// only clears the internal pixels texture for ofPixels
+// only clears the internal pixels texture
 template<typename ImageType>
 void ofxMovieClip<ImageType>::clearTexture() {
     if(pixelsTexture) pixelsTexture->clear();

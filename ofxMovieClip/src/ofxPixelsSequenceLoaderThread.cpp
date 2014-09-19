@@ -46,7 +46,7 @@ void ofxPixelsSequenceLoaderThread::loadSequence(string folderPath, string frame
 void ofxPixelsSequenceLoaderThread::startThread(bool mutexBlocks) {
     
     allAssetsLoaded = false;
-    collectionIndex = loadIndex = 0;
+    collectionIndex = loadIndex = 0;// assumes we have images to load
     ofThread::startThread(mutexBlocks);
 }
 
@@ -56,7 +56,7 @@ void ofxPixelsSequenceLoaderThread::threadedFunction(){
     while( isThreadRunning() ){
         
         mutex.lock();
-        if(!allAssetsLoaded) {
+        if(!allAssetsLoaded && collectionIndex != -1) {
             
             // load a single image from the movieclip meta info
             MovieClipData<ofPixels>* assetCollection = assetCollections[collectionIndex];
@@ -110,6 +110,8 @@ void ofxPixelsSequenceLoaderThread::threadedFunction(){
 //--------------------------------------------------------------
 void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel) {
     
+    waitForThread();
+    
     mutex.lock();
     int assetIndex = getAssetsId(frameLabel);
     if(assetIndex >= 0 && assetIndex < assetCollections[assetIndex]->imageFramesSize) {
@@ -119,7 +121,10 @@ void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel) {
         assetCollections[assetIndex]->complete = false;
     }    
     allAssetsLoaded = false;
+    collectionIndex =loadIndex = -1;
     mutex.unlock();
+    
+    
 }
 
 

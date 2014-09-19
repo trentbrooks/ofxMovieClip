@@ -34,8 +34,10 @@ class ofxMovieClip {
 		void restart();
 		void gotoAndPlay(int frameNumber);
 		void gotoAndStop(int frameNumber);
-		void gotoAndPlay(string frameLabel, int frameNumber=0);
-		void gotoAndStop(string frameLabel, int frameNumber=0);
+		void gotoAndPlay(string frameLabel);
+		void gotoAndStop(string frameLabel);
+		void gotoAndPlay(string frameLabel, int frameNumber);
+		void gotoAndStop(string frameLabel, int frameNumber);
 
         // display position
         void setPosition(float x, float y);
