@@ -32,7 +32,7 @@ void ofxMovieClip<ofTexture>::init(ofxImageSequenceLoader<ofTexture>* imageSeque
     // auto grab the width and height of the first asset
     if(width == -1 && height == -1 && activeAsset->imageFrames.size() > 0) {
         width = activeAsset->imageFrames[0]->getWidth();
-        height = activeAsset->imageFrames[0]->getWidth();
+        height = activeAsset->imageFrames[0]->getHeight();
     }
 }
 
@@ -52,7 +52,7 @@ void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequenc
     // auto grab the width and height of the first asset
     if(width == -1 && height == -1 && activeAsset->imageFrames.size() > 0) {
         width = activeAsset->imageFrames[0]->getWidth();
-        height = activeAsset->imageFrames[0]->getWidth();
+        height = activeAsset->imageFrames[0]->getHeight();
     }
 }
 
