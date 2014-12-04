@@ -1,6 +1,8 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxMovieClip.h"
+#include "ofxSpriteSheetMovieClip.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -31,4 +33,8 @@ class ofApp : public ofBaseApp{
         // threaded pixels loader (requires call to startThread() after loadSequence())
         //ofxPixelsSequenceLoaderThread imageSequence;
         //ofxPixelsMovieClip mc;
+    
+        // sprite sheets
+        ofxSpriteSheetLoader imageSpriteSheet;
+        ofxSpriteSheetMovieClip ssMc;
 };

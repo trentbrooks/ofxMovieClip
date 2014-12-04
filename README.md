@@ -1,6 +1,8 @@
-ofxMovieClip & ofxImageSequenceLoader are a set of helper classes for loading and controlling image sequences. These were created to add simple timeline control similar to Flash ( play(), stop(), gotoAndPlay(), etc ).
+ofxMovieClip & ofxImageSequenceLoader are a set of helper classes for loading and controlling image sequences. These were created to add simple timeline control ( play(), stop(), gotoAndPlay(), etc ).
 
 Now templated with ofxTextureMovieClip/ofxTextureImageSequence for ofTexture's, and ofxPixelsMovieClip/ofxPixelsImageSequence for ofPixels. ofPixels are good for large image sequences, stored on disk instead of graphics card.
+
+Also added ofxSpriteSheelLoader & ofxSpriteSheetMovieClip for single image sprite sheets.
 
 ## Credit ##
 ofxImageSequenceLoader is just a modified version of FlightPhase's http://www.flightphase.com ofxImageSequence.

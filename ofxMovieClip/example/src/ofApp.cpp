@@ -11,6 +11,7 @@ void ofApp::setup(){
     // load a folder of images as image sequence -optional 2nd paramter is frame label, if empty it defaults to folder name. eg "frogs"
     imageSequence.loadSequence("frogs");
     imageSequence.loadSequence("horses");
+    //imageSequence.loadSequence("ufo");
     
     // required for threaded loader
     //imageSequence.startThread();
@@ -18,6 +19,12 @@ void ofApp::setup(){
     // create a movieclip and pass in a reference to the ofxImageSequenceLoader & desired frame delay
     mc.init(&imageSequence, 1.0/30.0f); // eg. around 30fps
 	mc.gotoAndPlay("frogs");
+    
+    
+    // image spritesheet - smurf walking
+    imageSpriteSheet.loadSpriteSheet("spritesheet/smurf_sprite.png", 128, 128, 16, "smurf");
+    ssMc.init(&imageSpriteSheet, 1.0/30.0);
+    ssMc.setPosition(0, ofGetHeight()-ssMc.getHeight());
     
 }
 
@@ -33,6 +40,8 @@ void ofApp::draw(){
     ofBackground(255,255,0);
     ofSetColor(255);
     mc.draw(250, 300);
+    
+    ssMc.draw();
     
     ofSetColor(0);
     ofDrawBitmapString("Press 1 to play frog animation",20,20);
@@ -80,6 +89,7 @@ void ofApp::mouseDragged(int x, int y, int button){
     
     float newFrameDelay = ofMap(x, 0, ofGetWidth(), 0, 0.05);
     mc.setFrameDelay(newFrameDelay);
+    ssMc.setFrameDelay(newFrameDelay);
 }
 
 //--------------------------------------------------------------

@@ -48,12 +48,12 @@ class ofxMovieClip {
         float getHeight() { return height; };
 
 		// drawing
-		void draw();
-        void draw(float x, float y);
-		void draw(float x, float y, float w, float h);
+		virtual void draw();
+        virtual void draw(float x, float y);
+		virtual void draw(float x, float y, float w, float h);
 
         // texture
-        ofTexture* getTexturePtr();
+        virtual ofTexture* getTexturePtr();
         void clearTexture();
     
         // looping options
@@ -77,9 +77,9 @@ class ofxMovieClip {
 	protected:
 
 		// update methods
-		void tick();
-		void stepReverse();
-		void stepForward();
+		virtual void tick();
+		virtual void stepReverse();
+		virtual void stepForward();
     
         // display position
         ofPoint position;

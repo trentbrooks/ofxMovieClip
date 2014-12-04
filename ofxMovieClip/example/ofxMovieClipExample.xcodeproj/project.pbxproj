@@ -11,6 +11,8 @@
 		A766186916BB8CA500BBB4CF /* ofxMovieClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A766185F16BB8CA500BBB4CF /* ofxMovieClip.cpp */; };
 		A76CC92019999BCB006686A2 /* ofxPixelsSequenceLoaderThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A76CC91E19999BCB006686A2 /* ofxPixelsSequenceLoaderThread.cpp */; };
 		A79DE6EA1999BCED001CB9CC /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A79DE6E81999BCED001CB9CC /* ofApp.cpp */; };
+		A7E86CE91A2FCDC50008CC03 /* ofxSpriteSheetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7E86CE51A2FCDC50008CC03 /* ofxSpriteSheetLoader.cpp */; };
+		A7E86CEA1A2FCDC50008CC03 /* ofxSpriteSheetMovieClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7E86CE71A2FCDC50008CC03 /* ofxSpriteSheetMovieClip.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -71,6 +73,10 @@
 		A76CC91F19999BCB006686A2 /* ofxPixelsSequenceLoaderThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPixelsSequenceLoaderThread.h; sourceTree = "<group>"; };
 		A79DE6E81999BCED001CB9CC /* ofApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
 		A79DE6E91999BCED001CB9CC /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
+		A7E86CE51A2FCDC50008CC03 /* ofxSpriteSheetLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSpriteSheetLoader.cpp; sourceTree = "<group>"; };
+		A7E86CE61A2FCDC50008CC03 /* ofxSpriteSheetLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSpriteSheetLoader.h; sourceTree = "<group>"; };
+		A7E86CE71A2FCDC50008CC03 /* ofxSpriteSheetMovieClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSpriteSheetMovieClip.cpp; sourceTree = "<group>"; };
+		A7E86CE81A2FCDC50008CC03 /* ofxSpriteSheetMovieClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSpriteSheetMovieClip.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -141,6 +147,10 @@
 				A766185E16BB8CA500BBB4CF /* ofxImageSequenceLoader.h */,
 				A766185F16BB8CA500BBB4CF /* ofxMovieClip.cpp */,
 				A766186016BB8CA500BBB4CF /* ofxMovieClip.h */,
+				A7E86CE51A2FCDC50008CC03 /* ofxSpriteSheetLoader.cpp */,
+				A7E86CE61A2FCDC50008CC03 /* ofxSpriteSheetLoader.h */,
+				A7E86CE71A2FCDC50008CC03 /* ofxSpriteSheetMovieClip.cpp */,
+				A7E86CE81A2FCDC50008CC03 /* ofxSpriteSheetMovieClip.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -320,9 +330,11 @@
 			files = (
 				A76CC92019999BCB006686A2 /* ofxPixelsSequenceLoaderThread.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				A7E86CEA1A2FCDC50008CC03 /* ofxSpriteSheetMovieClip.cpp in Sources */,
 				A766186816BB8CA500BBB4CF /* ofxImageSequenceLoader.cpp in Sources */,
 				A79DE6EA1999BCED001CB9CC /* ofApp.cpp in Sources */,
 				A766186916BB8CA500BBB4CF /* ofxMovieClip.cpp in Sources */,
+				A7E86CE91A2FCDC50008CC03 /* ofxSpriteSheetLoader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
