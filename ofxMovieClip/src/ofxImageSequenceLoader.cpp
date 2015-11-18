@@ -59,7 +59,7 @@ void ofxImageSequenceLoader<ofTexture>::loadSequence(string folderPath, string f
 	// save meta data
     assetsAndLabel->frameLabel = (frameLabel == "") ? folderPath : frameLabel;
     assetsAndLabel->folderPath = folderPath;
-    assetsAndLabel->dir = dir;
+    //assetsAndLabel->dir = dir;
     assetsAndLabel->resizeHeight = resizeHeight;
     assetsAndLabel->resizeWidth = resizeWidth;
     assetsAndLabel->imageFramesSize = assetsAndLabel->imageFrames.size();
@@ -106,7 +106,7 @@ void ofxImageSequenceLoader<ofPixels>::loadSequence(string folderPath, string fr
 	// save meta data
     assetsAndLabel->frameLabel = (frameLabel == "") ? folderPath : frameLabel;
     assetsAndLabel->folderPath = folderPath;
-    assetsAndLabel->dir = dir;
+    //assetsAndLabel->dir = dir;
     assetsAndLabel->resizeHeight = resizeHeight;
     assetsAndLabel->resizeWidth = resizeWidth;
     assetsAndLabel->imageFramesSize = assetsAndLabel->imageFrames.size();

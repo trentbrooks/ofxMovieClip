@@ -5,6 +5,7 @@
 #include "ofxPixelsSequenceLoaderThread.h"
 #include "ofxImageSequenceLoader.h"
 
+
 /*
  ofxMovieClip
  - control image sequences with gotoAndPlay like controls.
@@ -20,7 +21,7 @@ class ofxMovieClip {
 		ofxMovieClip();
 
 		// initialisation
-		void init(ofxImageSequenceLoader<ImageType>* texIs, float frameDelay);
+		virtual void init(ofxImageSequenceLoader<ImageType>* texIs, float frameDelay);
         
 
 		// main ingrediant
@@ -73,6 +74,8 @@ class ofxMovieClip {
 
         PlaybackMode getPlaybackMode() { return playMode; };
     
+		// fix for threaded pixels not updating during stop/start/clear/reset thread
+		void resetPlayheadCopy() { playheadCopy = -1; }
     
 	protected:
 

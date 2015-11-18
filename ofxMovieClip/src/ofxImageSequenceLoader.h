@@ -20,7 +20,8 @@ struct MovieClipData {
     bool complete;
     int resizeWidth, resizeHeight;
     string folderPath;
-    ofDirectory dir;
+    //ofDirectory dir;
+    vector<string> imagePaths;
 };
 
 

@@ -1,5 +1,6 @@
 #include "ofxMovieClip.h"
 
+
 //--------------------------------------------------------------
 template<typename ImageType>
 ofxMovieClip<ImageType>::ofxMovieClip(){
@@ -277,12 +278,24 @@ ofTexture* ofxMovieClip<ofPixels>::getTexturePtr() {
             
             // thread has not finished loading image yet - will not draw
             // should probably also hold the playhead until this has occured? atm, the playhead can be too fast for the loader
-            return pixelsTexture;
+			//ofLog() << "1. Wrong px here: " << playheadCount << ", " << playheadCopy;
+			return pixelsTexture;
         }
         if(!pixelsTexture->isAllocated()) pixelsTexture->allocate(*px);
         pixelsTexture->loadData(*px);
     }
     
+	// always stops here unless the playhead is moving
+	// try to allocate from loading assets (thread is prob still loading)
+	if (!pixelsTexture->isAllocated()) {
+
+		ofPixels* px = activeAsset->imageFrames[playheadCount];
+		if (px->isAllocated()) {
+			pixelsTexture->allocate(*px);
+			pixelsTexture->loadData(*px);
+		}
+		
+	}
     return pixelsTexture;
 }
 

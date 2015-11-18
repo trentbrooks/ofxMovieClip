@@ -1,19 +1,22 @@
-#include "ofxPixelsSequenceLoaderThread.h"
+#include "ofxBufferedSequenceLoaderThread.h"
 #include "ofxMovieClip.h"
 
 //--------------------------------------------------------------
-ofxPixelsSequenceLoaderThread::ofxPixelsSequenceLoaderThread() {
+ofxBufferedSequenceLoaderThread::ofxBufferedSequenceLoaderThread() {
     allAssetsLoaded = false;
     collectionIndex = loadIndex = -1;
     sleepTime = 5;
+    
+    currentPlayheadIndex = -1;
+    maxBufferSize = 30;
 }
 
-ofxPixelsSequenceLoaderThread::~ofxPixelsSequenceLoaderThread() {
+ofxBufferedSequenceLoaderThread::~ofxBufferedSequenceLoaderThread() {
     waitForThread();
 }
  
 //--------------------------------------------------------------
-void ofxPixelsSequenceLoaderThread::loadSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight) {
+void ofxBufferedSequenceLoaderThread::loadSequence(string folderPath, string frameLabel, int resizeWidth, int resizeHeight) {
     
     mutex.lock();
     ofDirectory dir;
@@ -52,7 +55,7 @@ void ofxPixelsSequenceLoaderThread::loadSequence(string folderPath, string frame
     mutex.unlock();
 }
 
-void ofxPixelsSequenceLoaderThread::startThread(bool mutexBlocks) {
+void ofxBufferedSequenceLoaderThread::startThread(bool mutexBlocks) {
     
     allAssetsLoaded = false;
     collectionIndex = loadIndex = 0;// assumes we have images to load
@@ -60,7 +63,7 @@ void ofxPixelsSequenceLoaderThread::startThread(bool mutexBlocks) {
 }
 
 //--------------------------------------------------------------
-void ofxPixelsSequenceLoaderThread::threadedFunction(){
+void ofxBufferedSequenceLoaderThread::threadedFunction(){
     
     while( isThreadRunning() ){
         
@@ -68,7 +71,8 @@ void ofxPixelsSequenceLoaderThread::threadedFunction(){
         
         // this begins loading all images from index 0 until complete
         // images are loaded 1 by 1 (loadIndex) - so adjusting the sleepTime might be necessary to keep up
-        loadAllImages();
+        //loadAllImages();
+        loadPlayheadImages();
         
         mutex.unlock();
         
@@ -81,7 +85,7 @@ void ofxPixelsSequenceLoaderThread::threadedFunction(){
     }
 }
 
-void ofxPixelsSequenceLoaderThread::loadAllImages() {
+void ofxBufferedSequenceLoaderThread::loadAllImages() {
     
     if(!allAssetsLoaded && collectionIndex != -1) {
         
@@ -124,11 +128,104 @@ void ofxPixelsSequenceLoaderThread::loadAllImages() {
     }
 }
 
+void ofxBufferedSequenceLoaderThread::loadPlayheadImages() {
+    
+    // wait until the playhead has moved before loading more images...
+    //condition.wait(mutex);
+    
+    if(!allAssetsLoaded && collectionIndex != -1) {
+        
+        MovieClipData<ofPixels>* assetCollection = assetCollections[collectionIndex];
+        if(!assetCollection->complete) {
+            
+            // load a single image from the movieclip meta info- then increment the loadIndex
+            ofPixels* pixs = assetCollection->imageFrames[loadIndex];
+            if(!pixs->isAllocated()) {
+                
+                // load pixels data
+                bool loaded = ofLoadImage(*pixs, assetCollection->imagePaths[loadIndex]);
+                if(!loaded) {
+                    ofLogError() << "* Failed to load image: " << assetCollection->imagePaths[loadIndex];
+                } else {
+                    // resize/log on success
+                    if(assetCollection->resizeWidth > 0) pixs->resize(assetCollection->resizeWidth, assetCollection->resizeHeight);
+                    ofLogVerbose() << "Pixels: " << assetCollection->imagePaths[loadIndex];
+                }
+                
+                // increment load index even if image failed
+                loadIndex++;
+                //loadIndex = loadIndex % assetCollection->imageFramesSize;
+                if(loadIndex >= assetCollection->imageFramesSize) {
+                    //loadIndex = 0;
+                    assetCollection->complete = true;
+                    ofLog() << "Load complete";
+                    condition.wait(mutex);
+                }
+                
+                /*int bufferedIndex = currentPlayheadIndex + maxBufferSize;
+                bufferedIndex = bufferedIndex % assetCollection->imageFramesSize;
+                ofLog() << "Bufferd index; " << bufferedIndex;
+                if(loadIndex >= bufferedIndex) {
+                    condition.wait(mutex);
+                }*/
+                
+                
+            } else {
+                
+                //ofLogVerbose() << "Already allocated! " << loadIndex;
+                condition.wait(mutex);
+            }
+        }
+        
+        // when finished loading current sequence - start loading next, or finish
+        /*if(assetCollection->complete) {
+            if(collectionIndex >= assetCollectionSize-1) {
+                allAssetsLoaded = true;
+                collectionIndex = 0;
+            } else {
+                collectionIndex++;
+            }
+        }*/
+        
+    }
+}
 
+
+// if the playhead is moving- we need to trigger 'loading'
+void ofxBufferedSequenceLoaderThread::updateLoadFromPlayhead(int playheadIndex) {
+    
+    mutex.lock();
+    if(currentPlayheadIndex != playheadIndex) {
+        
+        // delete old image! (not threaded for now)
+        if(currentPlayheadIndex >= 0) {
+            ofPixels* pixs = assetCollections[0]->imageFrames[currentPlayheadIndex];
+            if(pixs->isAllocated()) {
+                ofLog() << "Deleting old image: " << currentPlayheadIndex;
+                pixs->clear();
+            }
+        }
+        
+        /*for(int i = 0; i < assetCollections[assetIndex]->imageFramesSize; i++) {
+            assetCollections[assetIndex]->imageFrames[i]->clear();
+        }*/
+        
+        currentPlayheadIndex = playheadIndex;
+        if(currentPlayheadIndex == 0 && assetCollections[collectionIndex]->complete) {
+            
+            // restart loading again from 0
+            assetCollections[collectionIndex]->complete = false;
+            loadIndex = 0;
+            
+        }
+        condition.signal();
+    }
+    mutex.unlock();
+}
 
 
 //--------------------------------------------------------------
-void ofxPixelsSequenceLoaderThread::clearImageData(bool stopThread) {
+void ofxBufferedSequenceLoaderThread::clearImageData(bool stopThread) {
     
     // check if thread is still running
     if(stopThread) waitForThread();
@@ -139,7 +236,6 @@ void ofxPixelsSequenceLoaderThread::clearImageData(bool stopThread) {
         if(assetIndex >= 0 && assetIndex < assetCollections[assetIndex]->imageFramesSize) {
             for(int i = 0; i < assetCollections[assetIndex]->imageFramesSize; i++) {
                 assetCollections[assetIndex]->imageFrames[i]->clear();
-				ofLogVerbose() << "Deleted asset from collection: " << assetIndex << " #: " << i;
             }
             assetCollections[assetIndex]->complete = false;
         }
@@ -149,7 +245,7 @@ void ofxPixelsSequenceLoaderThread::clearImageData(bool stopThread) {
     mutex.unlock();
 }
 
-void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel, bool stopThread) {
+void ofxBufferedSequenceLoaderThread::clearImageData(string frameLabel, bool stopThread) {
     
     // check if thread is still running
     if(stopThread) waitForThread();
@@ -169,7 +265,7 @@ void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel, bool stopT
     
 }
 
-/*void ofxPixelsSequenceLoaderThread::clearBufferFromPlayhead(MovieClipData<ofPixels>* movieClipData, int clearCount, int playheadIndex) {
+/*void ofxBufferedSequenceLoaderThread::clearBufferFromPlayhead(MovieClipData<ofPixels>* movieClipData, int clearCount, int playheadIndex) {
     
     // something weird going on with playhead herer!
     mutex.lock();
@@ -188,12 +284,12 @@ void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel, bool stopT
     mutex.unlock();
 }
 
-void ofxPixelsSequenceLoaderThread::clearBufferFromMovieClip(ofxMovieClip<ofPixels>* mc) {
+void ofxBufferedSequenceLoaderThread::clearBufferFromMovieClip(ofxMovieClip<ofPixels>* mc) {
     
     clearBufferFromPlayhead(mc->activeAsset, 30, mc->getPlayhead());
 }
 
-void ofxPixelsSequenceLoaderThread::clearImageFromPlayhead(MovieClipData<ofPixels>* movieClipData, int playheadIndex) {
+void ofxBufferedSequenceLoaderThread::clearImageFromPlayhead(MovieClipData<ofPixels>* movieClipData, int playheadIndex) {
     
     mutex.lock();
     if(playheadIndex < 0 ) {

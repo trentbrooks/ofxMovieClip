@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "ofxImageSequenceLoader.h"
 //#include "ofxMovieClip.h"
+#include "Poco/Condition.h"
 
 template <class T>
 class ofxMovieClip;
@@ -17,11 +18,11 @@ class ofxMovieClip;
  */
 
 
-class ofxPixelsSequenceLoaderThread : public ofxPixelsImageSequenceLoader, public ofThread  {
+class ofxBufferedSequenceLoaderThread : public ofxPixelsImageSequenceLoader, public ofThread  {
     
     public:
-        ofxPixelsSequenceLoaderThread();
-        ~ofxPixelsSequenceLoaderThread();
+        ofxBufferedSequenceLoaderThread();
+        ~ofxBufferedSequenceLoaderThread();
     
         // loads image sequence  by folder
         void loadSequence(string folderPath, string frameLabel = "", int resizeWidth = 0, int resizeHeight = 0);
@@ -51,7 +52,10 @@ class ofxPixelsSequenceLoaderThread : public ofxPixelsImageSequenceLoader, publi
     
         // manually delete a single image
         //void clearImageFromPlayhead(MovieClipData<ofPixels>* movieClipData, int playheadIndex);
-        
+    
+        int maxBufferSize;
+        int currentPlayheadIndex;
+        void updateLoadFromPlayhead(int playheadIndex);
     
     protected:
     
@@ -63,8 +67,8 @@ class ofxPixelsSequenceLoaderThread : public ofxPixelsImageSequenceLoader, publi
         void loadAllImages();
     
         // 2. load a preset buffer size of images based on the related movieclips playhead
-        //void loadPlayheadImages();
+        void loadPlayheadImages();
     
-        //Poco::Condition condition;
+        Poco::Condition condition;
     
 };
