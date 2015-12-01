@@ -2,7 +2,8 @@
 #include "ofMain.h"
 #include "ofxMovieClip.h"
 #include "ofxSpriteSheetMovieClip.h"
-
+#include "ofxBufferedMovieClip.h"
+#include "ofxBufferedSequenceLoaderThread.h"
 
 class ofApp : public ofBaseApp{
 
@@ -34,7 +35,13 @@ class ofApp : public ofBaseApp{
         //ofxPixelsSequenceLoaderThread imageSequence;
         //ofxPixelsMovieClip mc;
     
+    
         // sprite sheets
         ofxSpriteSheetLoader imageSpriteSheet;
         ofxSpriteSheetMovieClip ssMc;
+    
+    
+        // threaded pixel movieclips
+        ofxBufferedSequenceLoaderThread threadedLoader;
+        ofxBufferedMovieClip bufferMc;
 };

@@ -55,19 +55,23 @@ class ofxBufferedSequenceLoaderThread : public ofxPixelsImageSequenceLoader, pub
     
         int maxBufferSize;
         int currentPlayheadIndex;
-        void updateLoadFromPlayhead(int playheadIndex);
+        bool currentLoopMode;
+        void onPlayheadChanged(int playheadIndex, bool loopMode);
     
     protected:
     
         // keep track of which assets are loaded
         bool allAssetsLoaded;
-        int collectionIndex, loadIndex;
+        int collectionIndex, loadIndex, deleteIndex;
     
         // 1. loads each image one by one until batch is complete
         void loadAllImages();
     
         // 2. load a preset buffer size of images based on the related movieclips playhead
         void loadPlayheadImages();
+    
+        // 3.
+        void loadBufferedImages();
     
         Poco::Condition condition;
     

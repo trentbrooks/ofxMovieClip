@@ -23,7 +23,9 @@ void ofxBufferedMovieClip::draw() {
         getTexturePtr()->draw(position.x, position.y, width, height);
     else
         getTexturePtr()->draw(position.x, position.y);
-	tick(); // now gets called whenever a drawFrame is requested instead of manually
+    if(checkBuffersReady()) {
+        tick(); // now gets called whenever a drawFrame is requested instead of manually
+    }
 }
 
 void ofxBufferedMovieClip::draw(float x, float y) {
@@ -32,13 +34,28 @@ void ofxBufferedMovieClip::draw(float x, float y) {
         getTexturePtr()->draw(x, y, width, height);
     else
         getTexturePtr()->draw(x, y);
-	tick(); // now gets called whenever a drawFrame is requested instead of manually
+    if(checkBuffersReady()) {
+        tick(); // now gets called whenever a drawFrame is requested instead of manually
+    }
 }
 
 void ofxBufferedMovieClip::draw(float x, float y, float w, float h) {
     
-	getTexturePtr()->draw(x, y, w, h);
-	tick(); // now gets called whenever a drawFrame is requested instead of manually
+    getTexturePtr()->draw(x, y, w, h);
+    if(checkBuffersReady()) {
+        tick(); // now gets called whenever a drawFrame is requested instead of manually
+    }
+	
+}
+
+bool ofxBufferedMovieClip::checkBuffersReady() {
+    
+    // check the threaded loader and see if we have the next N frames ready or complete?
+    // if not begin loading them and check until we do.
+    if(activeAsset->complete) {
+        return true;
+    }
+    return false;
 }
 
 ofTexture* ofxBufferedMovieClip::getTexturePtr() {
@@ -51,7 +68,7 @@ ofTexture* ofxBufferedMovieClip::getTexturePtr() {
         //imageSequenceThread->clearImageFromPlayhead(activeAsset,playheadCopy);
         
         playheadCopy = playheadCount;
-        imageSequenceThread->updateLoadFromPlayhead(playheadCopy);
+        imageSequenceThread->onPlayheadChanged(playheadCount, loopOnFinish);
         if(!px->isAllocated()) {
             
             // thread has not finished loading image yet - will not draw

@@ -58,7 +58,7 @@ class ofxMovieClip {
         void clearTexture();
     
         // looping options
-        bool isLoopComplete() { return loopComplete; }
+        bool isLoopComplete() { return loopComplete; };
         bool isLastFrame() { return (playheadCount == activeAsset->imageFramesSize-1); };
         void setLooping(bool bLoop) { loopOnFinish = bLoop; };
         void setLoopCount(int bLoopCount) { loopCount = bLoopCount; };
@@ -71,6 +71,7 @@ class ofxMovieClip {
         int* getPlayheadPtr() { return &playheadCount; };
         int getPlayhead() { return playheadCount; };
         void setPlayhead(float frameNum) { playheadCount = frameNum ; };
+        int getFrameCount() { return activeAsset->imageFramesSize; }
 
         PlaybackMode getPlaybackMode() { return playMode; };
     

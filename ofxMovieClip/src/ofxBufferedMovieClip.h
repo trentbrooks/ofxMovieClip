@@ -29,6 +29,7 @@ class ofxBufferedMovieClip : public ofxMovieClip<ofPixels> {
         void draw(float x, float y, float w, float h);
     
         virtual ofTexture* getTexturePtr();
+        bool checkBuffersReady();
 
 	protected:
 
