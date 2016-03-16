@@ -180,7 +180,7 @@ void ofxBufferedSequenceLoaderThread::loadBufferedImages() {
                 } else {
                     // resize/log on success
                     if(assetCollection->resizeWidth > 0) pixs->resize(assetCollection->resizeWidth, assetCollection->resizeHeight);
-                    //ofLogVerbose() << "Loaded Pixels: " << assetCollection->imagePaths[loadIndex];
+                    ofLogVerbose() << "Loaded Pixels: " << assetCollection->imagePaths[loadIndex];
                 }
                 
                 // check if we have enough in buffer
@@ -208,7 +208,7 @@ void ofxBufferedSequenceLoaderThread::loadBufferedImages() {
                     if(deleteIndex >= 0) {
                         ofPixels* deletePx = assetCollection->imageFrames[deleteIndex];
                         if(deletePx->isAllocated()) {
-                            //ofLogVerbose() << "Deleting oldest (unused?) frame... " << deleteIndex << ", but also just loaded: " << loadIndex;
+                            ofLogVerbose() << "Deleting oldest (unused?) frame... " << deleteIndex << ", but also just loaded: " << loadIndex;
                             deletePx->clear();
                         }
                         

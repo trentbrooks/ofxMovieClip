@@ -131,7 +131,7 @@ void ofxPixelsSequenceLoaderThread::loadAllImages() {
 void ofxPixelsSequenceLoaderThread::clearImageData(bool stopThread) {
     
     // check if thread is still running
-    if(stopThread) waitForThread();
+    if(stopThread) waitForThread(true, 10000);
     
     // clear all image data for all frame labels
     mutex.lock();
@@ -152,7 +152,7 @@ void ofxPixelsSequenceLoaderThread::clearImageData(bool stopThread) {
 void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel, bool stopThread) {
     
     // check if thread is still running
-    if(stopThread) waitForThread();
+    if(stopThread) waitForThread(true, 10000);
     
     // clear all image data for selected frameLabel
     mutex.lock();
