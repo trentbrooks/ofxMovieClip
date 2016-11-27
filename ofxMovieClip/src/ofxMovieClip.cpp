@@ -15,6 +15,7 @@ ofxMovieClip<ImageType>::ofxMovieClip(){
     loopCount = 0;
     loopOnFinish = true;
     loopComplete = false;
+	yoyoOnFinish = false;
     activeAsset = NULL;
     pixelsTexture = NULL;
 }
@@ -51,6 +52,7 @@ void ofxMovieClip<ofPixels>::init(ofxImageSequenceLoader<ofPixels>* imageSequenc
     this->frameDelayInSeconds = frameDelay;
     
     // auto grab the width and height of the first asset
+    // does not account for threaded image loads here...
     if(width == -1 && height == -1 && activeAsset->imageFrames.size() > 0) {
         width = activeAsset->imageFrames[0]->getWidth();
         height = activeAsset->imageFrames[0]->getHeight();
@@ -196,13 +198,17 @@ void ofxMovieClip<ImageType>::stepForward() {
         
         playheadCount++;
         if(playheadCount >= activeAsset->imageFramesSize ) {
-            if(loopOnFinish) {
-                playheadCount = 0; // default behaviour
-            } else if(loopCount > 1) {
-                loopCount--;
-                playheadCount = 0;
-            } else {
+
+            if(yoyoOnFinish) {
+                playMode = STEP_REVERSE; // start playing back in reverse order
                 playheadCount = activeAsset->imageFramesSize -1;
+            } else if(loopOnFinish) {
+                playheadCount = 0; // default behaviour
+            }  else if(loopCount > 1) {
+                loopCount--;
+                playheadCount = 0; // loop back to beginning but decrease counter
+            } else {
+                playheadCount = activeAsset->imageFramesSize -1; // just stop at last frame
             }
             loopComplete = true;
         }
@@ -219,7 +225,11 @@ void ofxMovieClip<ImageType>::stepReverse() {
         
         playheadCount--;
         if(playheadCount < 0) {
-            if(loopOnFinish) {
+            if(yoyoOnFinish) {
+                playMode = STEP_FORWARD; // start playing back in reverse order
+                playheadCount = 0;
+            }
+            else if(loopOnFinish) {
                 playheadCount = activeAsset->imageFramesSize -1; // default behaviour
             } else if(loopCount > 1) {
                 loopCount--;

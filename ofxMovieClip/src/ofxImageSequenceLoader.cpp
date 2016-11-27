@@ -117,6 +117,45 @@ void ofxImageSequenceLoader<ofPixels>::loadSequence(string folderPath, string fr
     assetCollectionSize = assetCollections.size();
 }
 
+//--------------------------------------------------------------
+template<typename ImageType>
+void ofxImageSequenceLoader<ImageType>::resizeSequence(string folderPath, string folderOutputPath, int resizeWidth, int resizeHeight) {
+
+	ofDirectory dir;
+	int numFiles = dir.listDir(folderPath);
+	dir.sort();
+
+	int saveCount = 0;
+	for (int i = 0; i < numFiles; i++) {
+
+		string fileExtension = ofToUpper(dir.getFile(i).getExtension());
+		
+		if (fileExtension == "JPG" || fileExtension == "PNG") {
+
+			// load and allocate memory for images            
+			ofPixels* pixs = new ofPixels();
+			bool loaded = ofLoadImage(*pixs, dir.getPath(i));
+
+			if (!loaded) {
+				ofLogError() << "* Failed to load image: " << dir.getPath(i);
+				continue;
+			}
+
+			if (resizeWidth > 0) pixs->resize(resizeWidth, resizeHeight);
+
+			string outputPath = folderOutputPath + "/" + dir.getName(i);
+			ofLogVerbose() << ((i+1/numFiles)) << "Saving resized image to : " << outputPath;
+
+			//ofImageQualityType format = (fileExtension == "JPG") ? OF_IMAGE_FORMAT_JPEG : OF_IMAGE_FORMAT_PNG;
+			//void ofSaveImage(ofPixels & pix, string path, ofImageQualityType qualityLevel = OF_IMAGE_QUALITY_BEST);
+
+			ofSaveImage(*pixs, outputPath, OF_IMAGE_QUALITY_BEST);
+			saveCount++;
+		}
+	}
+
+	ofLog() << (saveCount) << " images resized to: " << folderOutputPath;
+}
 
 //--------------------------------------------------------------
 template<typename ImageType>

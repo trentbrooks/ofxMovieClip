@@ -61,7 +61,10 @@ class ofxMovieClip {
         bool isLoopComplete() { return loopComplete; };
         bool isLastFrame() { return (playheadCount == activeAsset->imageFramesSize-1); };
         void setLooping(bool bLoop) { loopOnFinish = bLoop; };
+        bool getLooping() { return loopOnFinish; };
         void setLoopCount(int bLoopCount) { loopCount = bLoopCount; };
+        int getLoopCount() { return loopCount; }
+        void setYoyoLooping(bool bYoyo) { yoyoOnFinish = bYoyo; };
     
         // playback setters/getters
         float* getFrameDelayPtr() { return &frameDelayInSeconds; };
@@ -72,6 +75,11 @@ class ofxMovieClip {
         int getPlayhead() { return playheadCount; };
         void setPlayhead(float frameNum) { playheadCount = frameNum ; };
         int getFrameCount() { return activeAsset->imageFramesSize; }
+        int getFrameLabelId() { return frameLabelId; }
+        string getFrameLabel() {
+            if(activeAsset) return activeAsset->frameLabel;
+            return "";
+        }
 
         PlaybackMode getPlaybackMode() { return playMode; };
     
@@ -106,6 +114,7 @@ class ofxMovieClip {
         bool loopComplete;
         bool loopOnFinish;
         int loopCount;
+        bool yoyoOnFinish;
 };
 
 // use these types = ofTexture, ofPixels

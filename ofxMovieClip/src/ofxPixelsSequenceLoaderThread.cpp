@@ -54,12 +54,37 @@ void ofxPixelsSequenceLoaderThread::loadSequence(string folderPath, string frame
 
 void ofxPixelsSequenceLoaderThread::startThread(bool mutexBlocks) {
     
-    allAssetsLoaded = false;
-    collectionIndex = loadIndex = 0;// assumes we have images to load
-    ofThread::startThread(mutexBlocks);
+    if(!isThreadRunning()) {
+        allAssetsLoaded = false;
+        collectionIndex = loadIndex = 0;// assumes we have images to load
+        ofThread::startThread(mutexBlocks);
+        
+        ofAddListener(ofEvents().update,this,&ofxPixelsSequenceLoaderThread::update);
+    } else {
+        ofLog() << "thread already running...";
+    }
+    
 }
 
 //--------------------------------------------------------------
+void ofxPixelsSequenceLoaderThread::update(ofEventArgs & args) {
+    
+    // auto updates should also automaticall remove listener when complete
+    //ofLog() << "pixels are updateing...";
+    if(getAllAssetsLoaded()) {
+        
+        ofLogVerbose() << "All assets loaded: stopping thread";
+        
+        stopThread();
+        
+        // notofy when all assets are ready - not thread safe?
+        ofNotifyEvent(onAllAssetsLoadedEvent);
+        
+        // stop the updates
+        ofRemoveListener(ofEvents().update,this,&ofxPixelsSequenceLoaderThread::update);
+    }
+}
+
 void ofxPixelsSequenceLoaderThread::threadedFunction(){
     
     while( isThreadRunning() ){
@@ -74,10 +99,15 @@ void ofxPixelsSequenceLoaderThread::threadedFunction(){
         
         sleep(sleepTime); //?
         
+        /*
         if(allAssetsLoaded) {
             ofLogVerbose() << "All assets loaded: stopping thread";
             stopThread();
+            
+            // notofy when all assets are ready - not thread safe?
+            ofNotifyEvent(onAllAssetsLoadedEvent);
         }
+         */
     }
 }
 
@@ -167,6 +197,11 @@ void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel, bool stopT
     collectionIndex =loadIndex = -1;
     mutex.unlock();
     
+}
+
+bool ofxPixelsSequenceLoaderThread::getAllAssetsLoaded() {
+    Poco::ScopedLock<ofMutex> lock(mutex);
+    return allAssetsLoaded;
 }
 
 /*void ofxPixelsSequenceLoaderThread::clearBufferFromPlayhead(MovieClipData<ofPixels>* movieClipData, int clearCount, int playheadIndex) {

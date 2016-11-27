@@ -38,6 +38,12 @@ class ofxPixelsSequenceLoaderThread : public ofxPixelsImageSequenceLoader, publi
         int sleepTime;
         void threadedFunction();
 
+        // completion event - not thread safe, just fires from within the thread loop
+        // need an auto update + remove
+        ofEvent<void> onAllAssetsLoadedEvent;
+    
+        // threadsafe auto update
+        void update(ofEventArgs & args);
     
         // deletes all image data
         void clearImageData(bool stopThread = true);
@@ -57,6 +63,7 @@ class ofxPixelsSequenceLoaderThread : public ofxPixelsImageSequenceLoader, publi
     
         // keep track of which assets are loaded
         bool allAssetsLoaded;
+        bool getAllAssetsLoaded();
         int collectionIndex, loadIndex;
     
         // 1. loads each image one by one until batch is complete

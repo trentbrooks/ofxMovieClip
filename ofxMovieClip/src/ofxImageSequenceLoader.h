@@ -39,6 +39,8 @@ class ofxImageSequenceLoader {
         void loadAndCreateSequence(string folderPath, string frameLabel = "", int resizeWidth = 0, int resizeHeight = 0) {
             loadSequence(folderPath, frameLabel, resizeWidth, resizeHeight);
         }
+
+		void resizeSequence(string folderPath, string folderOutputPath, int resizeWidth, int resizeHeight);
     
         vector<MovieClipData<ImageType>*> assetCollections;
         int assetCollectionSize;        
