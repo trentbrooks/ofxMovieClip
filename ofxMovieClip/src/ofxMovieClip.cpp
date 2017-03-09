@@ -291,7 +291,12 @@ ofTexture* ofxMovieClip<ofPixels>::getTexturePtr() {
 			//ofLog() << "1. Wrong px here: " << playheadCount << ", " << playheadCopy;
 			return pixelsTexture;
         }
-        if(!pixelsTexture->isAllocated()) pixelsTexture->allocate(*px);
+        if(!pixelsTexture->isAllocated()) {
+            //ofLog() << "Allocated new pixels movieclip...";
+            pixelsTexture->allocate(*px);
+            width = pixelsTexture->getWidth();
+            height = pixelsTexture->getHeight();
+        }
         pixelsTexture->loadData(*px);
     }
     
@@ -301,6 +306,7 @@ ofTexture* ofxMovieClip<ofPixels>::getTexturePtr() {
 
 		ofPixels* px = activeAsset->imageFrames[playheadCount];
 		if (px->isAllocated()) {
+            
 			pixelsTexture->allocate(*px);
 			pixelsTexture->loadData(*px);
 		}

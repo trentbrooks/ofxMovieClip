@@ -41,6 +41,7 @@ class ofxPixelsSequenceLoaderThread : public ofxPixelsImageSequenceLoader, publi
         // completion event - not thread safe, just fires from within the thread loop
         // need an auto update + remove
         ofEvent<void> onAllAssetsLoadedEvent;
+        ofEvent<void> onAssetsLoadedEvent; // called when individual sequences are finished
     
         // threadsafe auto update
         void update(ofEventArgs & args);
@@ -59,18 +60,22 @@ class ofxPixelsSequenceLoaderThread : public ofxPixelsImageSequenceLoader, publi
         //void clearImageFromPlayhead(MovieClipData<ofPixels>* movieClipData, int playheadIndex);
         
     
+        bool getAllAssetsLoaded();
+        int getCollectionIndex();
+    
     protected:
     
         // keep track of which assets are loaded
         bool allAssetsLoaded;
-        bool getAllAssetsLoaded();
         int collectionIndex, loadIndex;
+        int prevCollectionIndex;
     
         // 1. loads each image one by one until batch is complete
         void loadAllImages();
     
         // 2. load a preset buffer size of images based on the related movieclips playhead
         //void loadPlayheadImages();
+    
     
         //Poco::Condition condition;
     

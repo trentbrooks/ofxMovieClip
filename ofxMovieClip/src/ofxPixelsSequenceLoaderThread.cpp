@@ -4,7 +4,7 @@
 //--------------------------------------------------------------
 ofxPixelsSequenceLoaderThread::ofxPixelsSequenceLoaderThread() {
     allAssetsLoaded = false;
-    collectionIndex = loadIndex = -1;
+    collectionIndex = loadIndex = prevCollectionIndex = -1;
     sleepTime = 5;
 }
 
@@ -56,9 +56,10 @@ void ofxPixelsSequenceLoaderThread::startThread(bool mutexBlocks) {
     
     if(!isThreadRunning()) {
         allAssetsLoaded = false;
-        collectionIndex = loadIndex = 0;// assumes we have images to load
+        collectionIndex = loadIndex = prevCollectionIndex = 0;// assumes we have images to load
         ofThread::startThread(mutexBlocks);
         
+        // thread safe
         ofAddListener(ofEvents().update,this,&ofxPixelsSequenceLoaderThread::update);
     } else {
         ofLog() << "thread already running...";
@@ -71,6 +72,14 @@ void ofxPixelsSequenceLoaderThread::update(ofEventArgs & args) {
     
     // auto updates should also automaticall remove listener when complete
     //ofLog() << "pixels are updateing...";
+    
+    // check if collectionIndex has changed then notify of change (means one of the sequences is ready)
+    int cIndex = getCollectionIndex();
+    if(cIndex != prevCollectionIndex) {
+        ofNotifyEvent(onAssetsLoadedEvent);
+        prevCollectionIndex = cIndex;
+    }
+    
     if(getAllAssetsLoaded()) {
         
         ofLogVerbose() << "All assets loaded: stopping thread";
@@ -84,6 +93,8 @@ void ofxPixelsSequenceLoaderThread::update(ofEventArgs & args) {
         ofRemoveListener(ofEvents().update,this,&ofxPixelsSequenceLoaderThread::update);
     }
 }
+
+
 
 void ofxPixelsSequenceLoaderThread::threadedFunction(){
     
@@ -99,15 +110,15 @@ void ofxPixelsSequenceLoaderThread::threadedFunction(){
         
         sleep(sleepTime); //?
         
-        /*
-        if(allAssetsLoaded) {
+        // not thread safe
+        /*if(allAssetsLoaded) {
             ofLogVerbose() << "All assets loaded: stopping thread";
             stopThread();
             
             // notofy when all assets are ready - not thread safe?
             ofNotifyEvent(onAllAssetsLoadedEvent);
-        }
-         */
+        }*/
+         
     }
 }
 
@@ -144,6 +155,7 @@ void ofxPixelsSequenceLoaderThread::loadAllImages() {
         // when finished loading current sequence - start loading next, or finish
         if(assetCollection->complete) {
             if(collectionIndex >= assetCollectionSize-1) {
+                //ofLogVerbose() << "All assets loaded in thread!!! " << ofGetElapsedTimef();
                 allAssetsLoaded = true;
                 collectionIndex = 0;
             } else {
@@ -202,6 +214,11 @@ void ofxPixelsSequenceLoaderThread::clearImageData(string frameLabel, bool stopT
 bool ofxPixelsSequenceLoaderThread::getAllAssetsLoaded() {
     Poco::ScopedLock<ofMutex> lock(mutex);
     return allAssetsLoaded;
+}
+
+int ofxPixelsSequenceLoaderThread::getCollectionIndex() {
+    Poco::ScopedLock<ofMutex> lock(mutex);
+    return collectionIndex;
 }
 
 /*void ofxPixelsSequenceLoaderThread::clearBufferFromPlayhead(MovieClipData<ofPixels>* movieClipData, int clearCount, int playheadIndex) {
